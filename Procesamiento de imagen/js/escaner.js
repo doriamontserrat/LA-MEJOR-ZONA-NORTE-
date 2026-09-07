@@ -279,15 +279,15 @@
                 }
             });
 
-            // Rotación continua del modelo
-            const modeloEl = escenaAR.querySelector('a-gltf-model');
-            if (modeloEl) {
-                let angulo = 0;
-                setInterval(() => {
-                    angulo = (angulo + 2) % 360;
-                    modeloEl.setAttribute('rotation', `0 ${angulo} 0`);
-                }, 33);
-            }
+          // En lugar de rotar 'a-gltf-model', rotamos la entidad pivote
+           // const pivoteEl = escenaAR.querySelector('#pivote-modelo');
+            //if (pivoteEl) {
+               // let angulo = 0;
+                //setInterval(() => {
+                    //angulo = (angulo + 2) % 360;
+                    //pivoteEl.setAttribute('rotation', `0 ${angulo} 0`);
+               // }, 33);
+           // }
         }
 
         // Esperar a que el DOM y el custom element <a-scene> estén listos

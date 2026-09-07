@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Escanear Logo - La Mejor Zona Norte</title>
-    <link rel="stylesheet" href="../style.css">
-     <link rel="stylesheet" href="../escaner.css">
+    <link rel="stylesheet" href="/style.css">
+     <link rel="stylesheet" href="/escaner.css">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
@@ -14,7 +14,7 @@
 <body>
 
     <!-- Logo en el fondo blanco -->
-    <img src="../img/logo-dorados.png" alt="Marca de agua" class="page-watermark-bg">
+    <img src="/img/logo-dorados.png" alt="Marca de agua" class="page-watermark-bg">
 
     <!-- CONTENEDOR CON BORDE BLANCO -->
     <div class="camera-framed-wrapper">
@@ -23,16 +23,16 @@
         <div id="vista-camara" class="scanner-main-container">
             
             <div class="debug-status" id="debug-status">Cargando...</div>
-            <a href="principal.html" class="escaner-back-btn">❮</a>
+            <a href="/html/principal.html" class="escaner-back-btn">❮</a>
 
             <a-scene id="ar-scene"
-               mindar-image="imageTargetSrc: ../Escaneo/targets.mind; autoStart: true; uiScanning: no; uiLoading: no; uiError: no;"
+               mindar-image="imageTargetSrc: /Escaneo/targets.mind; autoStart: true; uiScanning: no; uiLoading: no; uiError: no;"
                color-space="sRGB"
                renderer="colorManagement: true, physicallyCorrectLights, alpha: true"
                vr-mode-ui="enabled: false"
                device-orientation-permission-ui="enabled: false">
                 <a-assets timeout="20000">
-                    <a-asset-item id="modelo-acereros-asset" src="../Modelos/acereros.glb"></a-asset-item> //MI MODELO MAUASHJDJKSHDJKHWSJK
+                    <a-asset-item id="modelo-acereros-asset" src="/Modelos/acereros.glb"></a-asset-item> //MI MODELO MAUASHJDJKSHDJKHWSJK
                 </a-assets>
 
                 <a-camera position="0 0 0" look-controls="enabled: false" cursor="fuse: false" raycaster="far: 10000; objects: .clickable"></a-camera>
@@ -102,7 +102,7 @@
             </header>
 
             <div class="scanned-logo-wrapper">
-                <img src="../img/logo-dorados.png" alt="Dorados de Chihuahua" class="scanned-logo-img">
+                <img src="/img/logo-dorados.png" alt="Dorados de Chihuahua" class="scanned-logo-img">
             </div>
 
             <div class="info-card-dark">
@@ -116,15 +116,15 @@
 
             <div class="result-actions-grid">
                 <button class="action-sq-btn" id="btn-compartir-resultado">
-                    <img src="../iconos/compartir.png" alt="Compartir" class="sq-custom-icon">
+                    <img src="/iconos/compartir.png" alt="Compartir" class="sq-custom-icon">
                     <span class="sq-text">COMPARTIR</span>
                 </button>
                 <button class="action-sq-btn" id="btn-info-resultado">
-                    <img src="../iconos/informacion.png" alt="Info" class="sq-custom-icon">
+                    <img src="/iconos/informacion.png" alt="Info" class="sq-custom-icon">
                     <span class="sq-text">INFO</span>
                 </button>
-                <button class="action-sq-btn" id="btn-inicio-resultado" onclick="window.location.href='principal.html'">
-                    <img src="../iconos/inicio.png" alt="Inicio" class="sq-custom-icon">
+                <button class="action-sq-btn" id="btn-inicio-resultado" onclick="window.location.href='/html/principal.html'">
+                    <img src="/iconos/inicio.png" alt="Inicio" class="sq-custom-icon">
                     <span class="sq-text">INICIO</span>
                 </button>
             </div>
@@ -148,6 +148,6 @@
 
     </div>
 
-    <script src="../js/escaner.js"></script>
+    <script src="/js/escaner.js"></script>
 </body>
 </html>

@@ -59,7 +59,7 @@
         });
 
         btnVerMasEquipo.addEventListener('click', () => {
-            const url = btnVerMasEquipo.dataset.url || 'estadio-aguascalientes.html';
+            const url = btnVerMasEquipo.dataset.url || '/html/estadio-aguascalientes.html';
             window.location.href = url;
         });
 
@@ -298,7 +298,7 @@
         }
 
         btnInfoResultado.addEventListener('click', () => {
-            window.location.href = 'estadio-monumental.html';
+            window.location.href = '/html/estadio-monumental.html';
         });
 
 

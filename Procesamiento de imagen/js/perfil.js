@@ -57,5 +57,5 @@
                 localStorage.removeItem('userAvatarTemp');
             }
 
-            window.location.href = 'principal.html';
+            window.location.href = '/html/principal.html';
         });

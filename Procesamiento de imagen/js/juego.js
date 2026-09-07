@@ -96,7 +96,7 @@ const coinCounter = document.getElementById('coin-counter');
         // Ir a escáner y activar detector
         btnIrEscaner.addEventListener('click', () => {
             sessionStorage.setItem('detectorActivo', 'true');
-            window.location.href = 'escaner.html';
+            window.location.href = '/html/escaner.html';
         });
 
         // COMPRAR OTRO LOGO

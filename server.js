@@ -3,30 +3,26 @@ const path = require('path');
 
 const app = express();
 
-// Carpeta raíz de archivos estáticos
-const publicPath = path.join(__dirname, 'Procesamiento de imagen');
-
-// Middleware para servir archivos estáticos
-app.use(express.static(publicPath));
 app.use(express.json());
 
-// Ruta principal
+// 1. Servir la carpeta 'html' como estática (para que /principal.html busque automáticamente en /html)
+app.use(express.static(path.join(__dirname, 'html')));
+
+// 2. Servir recursos de la raíz y subcarpetas (js, img, style.css, etc.)
+app.use(express.static(__dirname));
+
+// Ruta raíz (abre index.html por defecto)
 app.get('/', (req, res) => {
-    res.sendFile(path.join(publicPath, 'html', 'index.html'));
+    res.sendFile(path.join(__dirname, 'html', 'index.html'));
 });
 
-// Ruta catch-all para archivos HTML
-app.get('/:page.html', (req, res) => {
-    res.sendFile(path.join(publicPath, 'html', `${req.params.page}.html`));
+// En el entorno de Vercel es crítico usar process.env.PORT
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, '0.0.0.0', () => {
+    console.log('--------------------------------------------------');
+    console.log(` Servidor corriendo en http://localhost:${PORT}/escaner.html`);
+    console.log('--------------------------------------------------');
 });
 
-// Iniciar servidor HTTP en el puerto 3000
-app.listen(3000, '0.0.0.0', () => {
-    console.log('--------------------------------------------------');
-    console.log(' Aqui es el link papu:');
-    console.log(' http://localhost:3000/escaner.html');
-    console.log('--------------------------------------------------');
-    console.log(' Poner en otraterminal pal teléfono');
-    console.log(' lt --port 3000');
-    console.log('--------------------------------------------------');
-});
+module.exports = app; // Necesario para despliegues Serverless/Vercel

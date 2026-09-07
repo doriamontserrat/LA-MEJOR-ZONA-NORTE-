@@ -218,20 +218,20 @@ video,
         }
 
         /* UI ADAPTADA AL INTERIOR DEL MARCO */
+      /* INTERFAZ FLOTANTE INTERNA */
         .debug-status {
             position: absolute !important;
-            top: 10px !important;
-            left: 10px !important;
-            background: rgba(0, 0, 0, 0.85) !important;
-            color: #0f0 !important;
+            top: 15px !important;
+            right: 15px !important; /* Movido a la derecha */
+            left: auto !important;   /* Anula la posición izquierda previa */
+            background: rgba(255, 255, 255, 0.85) !important;
+            color: #3b82f6 !important; /* Azul eléctrico */
             font-family: monospace !important;
             font-size: 11px !important;
-            padding: 8px !important;
+            padding: 8px 12px !important;
             border-radius: 6px !important;
             z-index: 9999 !important;
-            max-width: 240px !important;
-            line-height: 1.3 !important;
-            border: 1px solid #0f0 !important;
+            border: 1px solid #3b82f6 !important; /* Borde azul a juego */
         }
 
         .escaner-back-btn {

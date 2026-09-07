@@ -162,7 +162,7 @@ h1 {
 
 
         /* Layout 100% responsive: la cámara ocupa siempre toda la pantalla disponible */
-        html, body {
+        .scanner-page html, .scanner-page body {
             margin: 0;
             padding: 0;
             width: 100%;

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil - La Mejor Zona Norte</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-light">
+
+    <main class="app-main-container profile-container">
+        
+        <!-- Encabezado -->
+        <header class="profile-header">
+            <a href="principal.html" class="back-btn">❮</a>
+            <h1 class="profile-title">MI PERFIL</h1>
+            <div class="header-spacer"></div> <!-- Espaciador para centrar el título -->
+        </header>
+
+        <!-- Información del Usuario -->
+        <div class="profile-info-section" id="profile-display">
+            <img src="img/avatar.jpg" alt="Avatar" class="profile-avatar-large" id="avatar-display">
+            <h2 class="profile-name" id="name-display">USUARIO</h2>
+        </div>
+        
+        <!-- Panel de datos del perfil -->
+        <div class="profile-data-panel" id="profile-data-display">
+            <div class="data-item">
+                <label class="data-label">CORREO</label>
+                <p class="data-value" id="data-email">correo@ejemplo.com</p>
+            </div>
+            <div class="data-item">
+                <label class="data-label">NÚMERO</label>
+                <p class="data-value" id="data-phone">+52 000 000 0000</p>
+            </div>
+            <div class="data-item">
+                <label class="data-label">CUMPLEAÑOS</label>
+                <p class="data-value" id="data-dob">No especificado</p>
+            </div>
+        </div>
+    
+        <!-- Menú de Opciones -->
+        <div class="profile-menu">
+            
+            <!-- Opción: Perfil -->
+            <a href="perfil.html" class="profile-menu-item">
+                <div class="menu-item-left">
+                    <div class="menu-icon-circle">
+                        <img src="iconos/perfil.png" alt="Icono Perfil" class="menu-custom-icon">
+                    </div>
+                    <span class="menu-text">EDITAR PERFIL</span>
+                </div>
+                <span class="menu-arrow">❯</span>
+            </a>
+
+            <!-- Opción: Álbum de Logos -->
+            <a href="juego.html" class="profile-menu-item">
+                <div class="menu-item-left">
+                    <div class="menu-icon-circle">
+                        <img src="iconos/album.png" alt="Icono Álbum" class="menu-custom-icon">
+                    </div>
+                    <span class="menu-text">ALBUM DE LOGOS</span>
+                </div>
+                <span class="menu-arrow">❯</span>
+            </a>
+
+            <!-- Opción: Salir -->
+            <!-- Cambia "index.html" por el nombre real de tu pantalla de Iniciar Sesión -->
+            <a href="index.html" class="profile-menu-item" onclick="cerrarSesion()">
+                <div class="menu-item-left">
+                    <div class="menu-icon-circle">
+                        <img src="iconos/salir.png" alt="Icono Salir" class="menu-custom-icon">
+                    </div>
+                    <span class="menu-text">SALIR</span>
+                </div>
+                <span class="menu-arrow">❯</span>
+            </a>
+
+        </div>
+
+    </main>
+
+    <!-- Navegación Inferior -->
+    <nav class="bottom-nav">
+        <a href="principal.html" class="nav-item"><img src="iconos/inicio.png" alt="Inicio" class="nav-icon"></a>
+        <a href="juego.html" class="nav-item"><img src="iconos/juego.png" alt="Juegos" class="nav-icon"></a>
+        <a href="escaner.html" class="nav-item"><img src="iconos/camara.png" alt="Cámara" class="nav-icon"></a>
+        <a href="quiz.html" class="nav-item"><img src="iconos/tablero.png" alt="Quiz" class="nav-icon"></a>
+        <a href="menu-perfil.html" class="nav-item active"><img src="img/avatar.jpg" alt="Mi Perfil" class="nav-avatar" id="nav-avatar-menu"></a>
+    </nav>
+
+    <script>
+        // Cargar datos del perfil al abrir la página
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProfileData();
+        });
+        
+        // Cargar información guardada en localStorage
+        function loadProfileData() {
+            const userName = localStorage.getItem('userName') || 'USUARIO';
+            const userPhone = localStorage.getItem('userPhone') || '+52 000 000 0000';
+            const userEmail = localStorage.getItem('userEmail') || 'correo@ejemplo.com';
+            const userDob = localStorage.getItem('userDob') || 'No especificado';
+            const userAvatar = localStorage.getItem('userAvatar');
+            
+            // Mostrar en vista de lectura
+            document.getElementById('name-display').textContent = userName.toUpperCase();
+            document.getElementById('data-email').textContent = userEmail;
+            document.getElementById('data-phone').textContent = userPhone;
+            
+            // Formatear fecha para mostrar
+            if (userDob && userDob !== 'No especificado') {
+                const fecha = new Date(userDob);
+                const opciones = { year: 'numeric', month: 'long', day: 'numeric' };
+                document.getElementById('data-dob').textContent = fecha.toLocaleDateString('es-MX', opciones);
+            } else {
+                document.getElementById('data-dob').textContent = 'No especificado';
+            }
+            
+            // Cargar avatar si existe
+            if (userAvatar) {
+                document.getElementById('avatar-display').src = userAvatar;
+                const navAvatar = document.getElementById('nav-avatar-menu');
+                if (navAvatar) navAvatar.src = userAvatar;
+            }
+            
+            // Cargar en formulario de edición
+            document.getElementById('edit-nombre').value = userName;
+            document.getElementById('edit-telefono').value = userPhone;
+            document.getElementById('edit-email').value = userEmail;
+            document.getElementById('edit-cumple').value = userDob || '';
+        }
+        
+        // Alternar entre modo lectura y edición
+        function toggleEditMode() {
+            const displaySection = document.getElementById('profile-display');
+            const dataPanel = document.getElementById('profile-data-display');
+            const editSection = document.getElementById('profile-edit');
+            
+            if (editSection.style.display === 'none') {
+                displaySection.style.display = 'none';
+                dataPanel.style.display = 'none';
+                editSection.style.display = 'block';
+            } else {
+                displaySection.style.display = 'block';
+                dataPanel.style.display = 'block';
+                editSection.style.display = 'none';
+            }
+        }
+        
+        // Guardar cambios
+        document.getElementById('profile-edit-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const nombre = document.getElementById('edit-nombre').value;
+            const telefono = document.getElementById('edit-telefono').value;
+            const email = document.getElementById('edit-email').value;
+            const cumple = document.getElementById('edit-cumple').value;
+            
+            // Guardar en localStorage
+            localStorage.setItem('userName', nombre);
+            localStorage.setItem('userPhone', telefono);
+            localStorage.setItem('userEmail', email);
+            localStorage.setItem('userDob', cumple);
+            
+            // Recargar datos y cerrar editor
+            loadProfileData();
+            toggleEditMode();
+        });
+        
+        // Función rápida para limpiar la memoria al salir (opcional)
+        function cerrarSesion() {
+            // Si quieres que el juego se reinicie al cerrar sesión, quita las diagonales de la siguiente línea:
+            // localStorage.clear();
+        }
+    </script>
+</body>
+</html>

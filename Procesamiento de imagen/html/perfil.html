@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil - La Mejor Zona Norte</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <main class="login-container">
+        <!-- SECCIÓN IZQUIERDA: Editar Perfil -->
+        <section class="login-form-section">
+            <div class="profile-wrapper">
+                
+                <!-- Encabezado con botón de regresar -->
+                <div class="profile-header">
+                    <a href="principal.html" class="back-button">❮</a>
+                    <h2 class="profile-title">MI PERFIL</h2>
+                </div>
+
+                <!-- Foto de perfil y botón de editar -->
+                <div class="profile-avatar-container">
+                    <img src="img/avatar.jpg" alt="Foto de perfil" class="profile-avatar" id="vista-previa-foto">
+                    
+                    <!-- Botón visual para el input file -->
+                    <label for="subir-foto" class="edit-avatar-btn">✏️</label>
+                    
+                    <!-- Input oculto para subir la imagen -->
+                    <input type="file" id="subir-foto" accept="image/*" style="display: none;">
+                </div>
+
+                <!-- Formulario de datos con id="profile-form" -->
+                <form id="profile-form" class="profile-form">
+                    
+                    <div class="input-group">
+                        <label>NOMBRE COMPLETO</label>
+                        <input type="text" id="input-nombre" placeholder="Tu nombre" required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>NÚMERO</label>
+                        <input type="tel" id="input-telefono" placeholder="+52 000 000 0000" required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>GMAIL</label>
+                        <input type="email" id="input-email" placeholder="correo@ejemplo.com" required>
+                    </div>
+
+                     <div class="input-group">
+                        <label>CONTRASEÑA</label>
+                        <input type="contra" id="input-contra" placeholder="Contraseña segura ejemplo: DmGc142857¿" required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>CUMPLEAÑOS</label>
+                        <input type="date" id="input-cumple" required>
+                    </div>
+                    
+                    <button type="submit" class="btn-guardar">Guardar</button>
+                </form>
+
+            </div>
+        </section>
+
+        <!-- SECCIÓN DERECHA: Panel Azul (Solo PC) -->
+        <section class="login-branding-section">
+            <div class="branding-content">
+                <img src="img/logo-blanco.png" alt="Logo Blanco" class="logo-branding">
+                <h2>Lo mejor del Béisbol de la Zona norte lo encuentras aquí</h2>
+            </div>
+        </section>
+    </main>
+
+    <script src="js/perfil.js"></script>
+</body>
+</html>

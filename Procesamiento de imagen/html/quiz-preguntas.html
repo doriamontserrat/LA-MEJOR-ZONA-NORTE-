@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jugando Quiz - La Mejor Zona Norte</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-light">
+
+    <main class="app-main-container quiz-play-container">
+        
+        <!-- Encabezado del Juego (Se oculta en resultados) -->
+        <header class="quiz-play-header" id="quiz-header">
+            <div class="progress-container">
+                <span id="question-counter">PREGUNTA 1 DE 5</span>
+                <div class="progress-bar-bg">
+                    <div id="progress-bar-fill" class="progress-bar-fill"></div>
+                </div>
+            </div>
+            <div class="score-container">
+                <span class="score-label">MONEDAS</span>
+                <span id="score-counter" class="score-number">0</span>
+            </div>
+        </header>
+
+        <!-- TARJETA 1: PREGUNTAS (Activa durante el juego) -->
+        <div class="quiz-question-card" id="quiz-card">
+            
+            <div class="card-header">
+                <span id="category-badge" class="category-badge">GENERAL</span>
+                <div id="timer-circle" class="timer-circle">20</div>
+            </div>
+
+            <h2 id="question-text" class="question-text">¿Cargando pregunta...?</h2>
+
+            <div class="options-container">
+                <button class="option-btn" onclick="seleccionarOpcion(0)">
+                    <span class="option-letter">A</span>
+                    <span id="option-0-text" class="option-text">Opción A</span>
+                </button>
+                <button class="option-btn" onclick="seleccionarOpcion(1)">
+                    <span class="option-letter">B</span>
+                    <span id="option-1-text" class="option-text">Opción B</span>
+                </button>
+                <button class="option-btn" onclick="seleccionarOpcion(2)">
+                    <span class="option-letter">C</span>
+                    <span id="option-2-text" class="option-text">Opción C</span>
+                </button>
+                <button class="option-btn" onclick="seleccionarOpcion(3)">
+                    <span class="option-letter">D</span>
+                    <span id="option-3-text" class="option-text">Opción D</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- TARJETA 2: RESULTADOS (Oculta hasta el final) -->
+        <div class="quiz-results-card" id="results-card" style="display: none;">
+            
+            <h1 id="result-title" class="result-title">¡Sigue practicando!</h1>
+            <p id="result-score-text" class="result-score-text">Acertaste 0 de 5</p>
+            <p id="result-coins-text" class="result-coins-text">¡Ganaste +0 monedas! 💰</p>
+
+            <div class="percentage-circle">
+                <span id="result-percentage">0%</span>
+            </div>
+
+            <div class="review-section">
+                <h3 class="review-title">REPASO DE PREGUNTAS</h3>
+                <div id="review-container" class="review-container">
+                    <!-- Las respuestas se inyectarán aquí con JavaScript -->
+                </div>
+            </div>
+
+            <button class="btn-play-again" onclick="window.location.href='quiz.html'">VOLVER A JUGAR</button>
+        </div>
+
+    </main>
+
+    <script src="js/quiz.js"></script>
+</body>
+</html>

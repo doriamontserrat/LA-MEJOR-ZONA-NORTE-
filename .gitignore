@@ -1,0 +1,15 @@
+# Dependencias de Node
+node_modules/
+
+# Archivos de entorno / Claves secretas de base de datos
+.env
+.env.local
+
+# Archivos de registros y logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Archivos de sistema operativo
+.DS_Store
+Thumbs.db

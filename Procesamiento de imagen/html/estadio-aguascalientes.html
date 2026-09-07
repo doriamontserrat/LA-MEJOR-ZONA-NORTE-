@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rieleros de Aguascalientes - La Mejor Zona Norte</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-ficha">
+    <script>if (!localStorage.getItem('userEmail')) { window.location.href = 'index.html'; }</script>
+
+    <div class="team-top-bar">
+        <img src="img/logo-rieleros.png" alt="Rieleros" class="team-logo">
+        <img src="img/logo-blanco.png" alt="La Mejor Zona Norte" class="app-logo">
+    </div>
+
+    <main class="ficha-container">
+        <div class="ficha-hero">
+            <a href="principal.html" class="ficha-back">❮</a>
+            <button class="ficha-like">♡</button>
+            <img src="img/estadio-agu.jpg" alt="Parque Romo Chavez" class="ficha-img">
+            <div class="ficha-gradient"></div>
+            <div class="ficha-info-overlay">
+                <h2>Parque Romo Chávez</h2>
+                <p>📍 Aguascalientes, Ags.</p>
+            </div>
+        </div>
+
+        <div class="ficha-body">
+            <h1 class="ficha-team-title">RIELEROS DE AGUASCALIENTES</h1>
+            
+            <h3 class="ficha-subtitle">Historia</h3>
+            <p class="ficha-text">Con el histórico silbato del tren, los Rieleros llevan alegría y tradición al diamante hidrocálido en cada jornada.</p>
+
+            <button id="btn-ver-mas" class="btn-primary ficha-btn">Ver mas</button>
+
+            <div id="contenido-extra" class="ficha-extra-info" style="display: none;">
+                <h3 class="ficha-subtitle">Inicios del Equipo</h3>
+                <p class="ficha-text">Fundados en 1975, han forjado una identidad única ligada a la historia ferroviaria del estado de Aguascalientes.</p>
+
+                <h3 class="ficha-subtitle">Campeonatos (1)</h3>
+                <p class="ficha-text">Alcanzaron la gloria máxima de la LMB al coronarse campeones en la temporada de 1978.</p>
+
+                <h3 class="ficha-subtitle">Jugadores Estrella Clásicos</h3>
+                <ul class="ficha-list">
+                    <li>⭐ Grimaldo Martínez</li>
+                    <li>⭐ Leo Valenzuela</li>
+                    <li>⭐ Jesse Castillo</li>
+                    <li>⭐ Amilcar Gaxiola</li>
+                </ul>
+
+                <h3 class="ficha-subtitle">Jugadas Destacadas</h3>
+                <div class="video-container">
+                    <iframe width="100%" height="200" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const btnVerMas = document.getElementById('btn-ver-mas');
+        const contenidoExtra = document.getElementById('contenido-extra');
+        btnVerMas.addEventListener('click', function() {
+            contenidoExtra.style.display = 'block';
+            btnVerMas.style.display = 'none';
+        });
+
+        const btnLike = document.querySelector('.ficha-like');
+        const equipoActual = 'Rieleros de Aguascalientes';
+        let favoritos = JSON.parse(localStorage.getItem('misFavoritos')) || [];
+        if (favoritos.includes(equipoActual)) {
+            btnLike.classList.add('liked'); btnLike.textContent = '♥'; btnLike.style.color = '#ff3b30'; 
+        }
+        btnLike.addEventListener('click', function() {
+            let favs = JSON.parse(localStorage.getItem('misFavoritos')) || [];
+            this.classList.toggle('liked');
+            if(this.classList.contains('liked')) {
+                this.textContent = '♥'; this.style.color = '#ff3b30';
+                if (!favs.includes(equipoActual)) favs.push(equipoActual);
+            } else {
+                this.textContent = '♡'; this.style.color = 'white';
+                favs = favs.filter(e => e !== equipoActual);
+            }
+            localStorage.setItem('misFavoritos', JSON.stringify(favs));
+        });
+    </script>
+</body>
+</html>

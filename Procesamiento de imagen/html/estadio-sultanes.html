@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sultanes de Monterrey - La Mejor Zona Norte</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-ficha">
+
+    <!-- NUEVA BARRA SUPERIOR DE CO-BRANDING (Ahora está hasta arriba de la página) -->
+    <div class="team-top-bar">
+        <!-- Logo del equipo (Izquierda) -->
+        <img src="img/logo-sultanes.png" alt="Sultanes de Monterrey" class="team-logo">
+        
+        <!-- Logo de tu plataforma (Derecha) -->
+        <img src="img/logo-blanco.png" alt="La Mejor Zona Norte" class="app-logo">
+    </div>
+
+    <!-- Contenedor principal de la información -->
+    <main class="ficha-container">
+        
+        <!-- Tarjeta Superior (Foto del estadio) -->
+        <div class="ficha-hero">
+            <!-- Botón de regresar -->
+            <a href="principal.html" class="ficha-back">❮</a>
+            <!-- Botón de favoritos -->
+            <button class="ficha-like">♡</button>
+            
+            <img src="img/estadio-mty.jpg" alt="Estadio de los Sultanes" class="ficha-img">
+            <div class="ficha-gradient"></div>
+            
+            <div class="ficha-info-overlay">
+                <h2>Estadio de los Sultanes</h2>
+                <p>📍 Monterrey, Nuevo León</p>
+            </div>
+        </div>
+
+        <!-- Contenido de la Ficha -->
+        <div class="ficha-body">
+            <h1 class="ficha-team-title">SULTANES DE MONTERREY</h1>
+            
+            <h3 class="ficha-subtitle">Historia</h3>
+            <p class="ficha-text">
+                Fue construido entre 1987 y 1989. Sus 22,078 asientos lo convierten en el estadio de béisbol de mayor capacidad en México. Actualmente es casa de los Sultanes de Monterrey, campeones en 10 ocasiones de la Liga Mexicana de Béisbol.
+            </p>
+
+            <button id="btn-ver-mas" class="btn-primary ficha-btn">Ver mas</button>
+
+            <!-- SECCIÓN OCULTA -->
+            <div id="contenido-extra" class="ficha-extra-info" style="display: none;">
+                
+                <h3 class="ficha-subtitle">Inicios del Equipo</h3>
+                <p class="ficha-text">
+                    Fundados el 20 de mayo de 1939, son la franquicia de mayor tradición y antigüedad en la Liga Mexicana de Béisbol. Originalmente conocidos como "Carta Blanca", pasaron a ser los Sultanes impulsando la pasión beisbolera en el norte del país.
+                </p>
+
+                <h3 class="ficha-subtitle">Campeonatos (10)</h3>
+                <ul class="ficha-list">
+                    <li>1943, 1947, 1948, 1949 (Bicampeonatos dorados)</li>
+                    <li>1962, 1991, 1995, 1996</li>
+                    <li>2007 (La época moderna)</li>
+                    <li>2018 (Torneo de Otoño)</li>
+                </ul>
+
+                <h3 class="ficha-subtitle">Jugadores Estrella Clásicos</h3>
+                <ul class="ficha-list">
+                    <li>⭐ Epitacio "La Mala" Torres</li>
+                    <li>⭐ Héctor Espino (El Superman de Chihuahua)</li>
+                    <li>⭐ Miguel Flores</li>
+                    <li>⭐ Vinicio García</li>
+                    <li>⭐ Felipe "Clipper" Montemayor</li>
+                    <li>⭐ Jaime Corella</li>
+                </ul>
+
+                <h3 class="ficha-subtitle">Jugadas Destacadas</h3>
+                <div class="video-container">
+                    <iframe width="100%" height="200" src="https://www.youtube.com/embed/P65Q3dE_oOE" title="Jugadas Sultanes" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Script -->
+    <script>
+        // --- LÓGICA DEL BOTÓN VER MAS ---
+        const btnVerMas = document.getElementById('btn-ver-mas');
+        const contenidoExtra = document.getElementById('contenido-extra');
+
+        btnVerMas.addEventListener('click', function() {
+            contenidoExtra.style.display = 'block';
+            btnVerMas.style.display = 'none';
+        });
+
+        // --- LÓGICA DEL CORAZÓN CON MEMORIA (LOCALSTORAGE) ---
+        const btnLike = document.querySelector('.ficha-like');
+        const equipoActual = 'Sultanes de Monterrey'; // El nombre exacto para guardarlo
+
+        // 1. Al cargar la página, revisamos si ya estaba en favoritos
+        let favoritos = JSON.parse(localStorage.getItem('misFavoritos')) || [];
+        if (favoritos.includes(equipoActual)) {
+            btnLike.classList.add('liked');
+            btnLike.textContent = '♥';
+            btnLike.style.color = '#ff3b30'; 
+        }
+
+        // 2. Cuando le damos clic al corazón
+        btnLike.addEventListener('click', function() {
+            // Volvemos a leer la memoria por si hubo cambios
+            let favoritos = JSON.parse(localStorage.getItem('misFavoritos')) || [];
+            
+            this.classList.toggle('liked');
+            
+            if(this.classList.contains('liked')) {
+                // Lo agregamos a favoritos
+                this.textContent = '♥';
+                this.style.color = '#ff3b30'; 
+                if (!favoritos.includes(equipoActual)) {
+                    favoritos.push(equipoActual);
+                }
+            } else {
+                // Lo quitamos de favoritos
+                this.textContent = '♡';
+                this.style.color = 'white'; 
+                favoritos = favoritos.filter(equipo => equipo !== equipoActual);
+            }
+            
+            // Guardamos la nueva lista en la memoria del navegador
+            localStorage.setItem('misFavoritos', JSON.stringify(favoritos));
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz - La Mejor Zona Norte</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-light">
+
+    <main class="app-main-container quiz-container">
+        
+        <!-- Encabezado -->
+        <header class="game-header">
+            <a href="principal.html" class="game-back">❮ QUIZ</a>
+            <img src="img/logo-azul.png" alt="La Mejor Zona Norte" class="game-top-logo">
+            <a href="perfil.html">
+                <img src="img/avatar.jpg" alt="Perfil" class="header-avatar" id="header-avatar-quiz">
+            </a>
+        </header>
+
+        <!-- Píldora de Monedas Centrada -->
+        <div class="quiz-coin-center">
+            <div class="coin-pill">
+                <span class="coin-icon">💰</span> <span id="quiz-coin-counter">0</span>
+            </div>
+        </div>
+
+        <!-- Textos Introductorios -->
+        <div class="quiz-intro" style="margin-top: 60px; margin-bottom: 60px;">
+            <p>Pongamos a prueba tu sabiduría.<br>Por cada respuesta bien ganas 5 monedas.</p>
+            
+            <h1 class="quiz-main-title">BEISBOL DEL NORTE</h1>
+            
+            <span class="quiz-rules">5 PREGUNTAS - 20 SEGUNDOS CADA UNA</span>
+        </div>
+
+        <!-- Botón de Comenzar -->
+        <div class="action-btn-container" style="margin-top: 40px;">
+            <button id="btn-comenzar" class="btn-start-quiz">COMENZAR QUIZ</button>
+        </div>
+
+    </main>
+
+    <!-- Navegación Inferior -->
+    <nav class="bottom-nav">
+        <a href="principal.html" class="nav-item"><img src="iconos/inicio.png" alt="Inicio" class="nav-icon"></a>
+        <a href="juego.html" class="nav-item"><img src="iconos/juego.png" alt="Juegos" class="nav-icon"></a>
+        <a href="escaner.html" class="nav-item"><img src="iconos/camara.png" alt="Cámara" class="nav-icon"></a>
+        <a href="quiz.html" class="nav-item active"><img src="iconos/tablero.png" alt="Quiz" class="nav-icon"></a>
+        <a href="menu-perfil.html" class="nav-item"><img src="img/avatar.jpg" alt="Mi Perfil" class="nav-avatar" id="nav-avatar-quiz"></a>
+    </nav>
+
+    <!-- Lógica de Redirección Directa -->
+    <script>
+        // Cargar foto de perfil desde localStorage
+        document.addEventListener('DOMContentLoaded', () => {
+            const avatarGuardado = localStorage.getItem('userAvatar');
+            if (avatarGuardado) {
+                const headerAvatar = document.getElementById('header-avatar-quiz');
+                const navAvatar = document.getElementById('nav-avatar-quiz');
+                if (headerAvatar) headerAvatar.src = avatarGuardado;
+                if (navAvatar) navAvatar.src = avatarGuardado;
+            }
+        });
+
+        const coinCounter = document.getElementById('quiz-coin-counter');
+        const btnComenzar = document.getElementById('btn-comenzar');
+        
+        // 1. Cargar las monedas guardadas en la memoria
+        let misMonedas = parseInt(localStorage.getItem('misMonedas')) || 0;
+        coinCounter.textContent = misMonedas;
+
+        // 2. Lógica directa para Comenzar
+        btnComenzar.addEventListener('click', function() {
+            // Guardamos la etiqueta "GENERAL" para que el otro archivo la muestre arriba
+            localStorage.setItem('categoriaQuiz', 'GENERAL');
+            
+            // Te lleva directa y automáticamente a las preguntas sin alertas negras
+            window.location.href = 'quiz-preguntas.html'; 
+        });
+    </script>
+</body>
+</html>

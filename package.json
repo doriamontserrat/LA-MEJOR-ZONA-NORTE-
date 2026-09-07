@@ -1,0 +1,20 @@
+{
+  "name": "procesamiento-de-imagen-(1)",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "express": "^5.2.1",
+    "mkcert": "^3.2.0",
+    "selfsigned": "^5.5.0",
+    "three": "^0.185.1"
+  }
+}

@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Escáner AR - Acereros</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #000;
+            overflow: hidden;
+            width: 100%;
+            height: 100vh;
+        }
+
+        #container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        #camera-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .header {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-size: 24px;
+            padding: 10px 15px;
+            border-radius: 50%;
+            cursor: pointer;
+            pointer-events: auto;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .info-box {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px;
+            border-radius: 10px;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            margin: 20px;
+            text-align: center;
+            pointer-events: auto;
+        }
+
+        .status {
+            color: #ffaa00;
+        }
+
+        .success {
+            color: #00ff00;
+        }
+
+        .error {
+            color: #ff4444;
+        }
+
+        .controls {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            background: rgba(0, 150, 255, 0.8);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            pointer-events: auto;
+            transition: background 0.3s;
+        }
+
+        .control-btn:hover {
+            background: rgba(0, 150, 255, 1);
+        }
+
+        .control-btn:active {
+            transform: scale(0.95);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .scan-indicator {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 300px;
+            border: 3px dashed #00ff00;
+            border-radius: 20px;
+            opacity: 0.6;
+            z-index: 5;
+            pointer-events: none;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(0, 255, 0, 0.7);
+            }
+            50% {
+                box-shadow: 0 0 0 10px rgba(0, 255, 0, 0);
+            }
+        }
+
+        .model-found {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 255, 0, 0.2);
+            border: 2px solid #00ff00;
+            color: #00ff00;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            display: none;
+            z-index: 15;
+            animation: blink 0.5s infinite;
+        }
+
+        .model-found.active {
+            display: block;
+        }
+
+        @keyframes blink {
+            0%, 49%, 100% {
+                opacity: 1;
+            }
+            50%, 99% {
+                opacity: 0.5;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <video id="camera-video" playsinline autoplay muted></video>
+        <canvas id="ar-canvas"></canvas>
+
+        <!-- Indicador de escaneo -->
+        <div class="scan-indicator"></div>
+        <div class="model-found" id="model-found">✓ ¡Logo detectado!</div>
+
+        <div class="overlay">
+            <div class="header">
+                <button class="back-btn" onclick="window.history.back()">←</button>
+                <div class="title">Escáner AR - Acereros</div>
+                <div style="width: 45px;"></div>
+            </div>
+
+            <div class="info-box">
+                <div id="status-text" class="status">Iniciando cámara...</div>
+            </div>
+
+            <div class="controls">
+                <button class="control-btn" id="start-btn" onclick="startAR()">Iniciar AR</button>
+                <button class="control-btn" id="stop-btn" onclick="stopAR()" style="background: rgba(255, 0, 0, 0.8)">Detener</button>
+                <button class="control-btn" id="camera-btn" onclick="switchCamera()">Cambiar Cámara</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Librerías -->
+    <script src="https://cdn.jsdelivr.net/npm/three@r128/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.7/dist/mindar-image-three.prod.js"></script>
+
+    <script>
+        // Variables globales
+        let mindarController;
+        let scene, renderer, camera, model;
+        let isRunning = false;
+        let facingMode = 'environment'; // 'environment' para trasera, 'user' para frontal
+
+        // Actualizar status
+        function updateStatus(message, type = 'status') {
+            const statusEl = document.getElementById('status-text');
+            statusEl.textContent = message;
+            statusEl.className = type;
+        }
+
+        // Inicializar Three.js scene
+        async function initThreeScene() {
+            // Scene
+            scene = new THREE.Scene();
+
+            // Camera
+            const video = document.getElementById('camera-video');
+            camera = new THREE.PerspectiveCamera(
+                75,
+                window.innerWidth / window.innerHeight,
+                0.1,
+                1000
+            );
+
+            // Renderer
+            const canvas = document.getElementById('ar-canvas');
+            renderer = new THREE.WebGLRenderer({
+                canvas: canvas,
+                alpha: true,
+                antialias: true,
+                preserveDrawingBuffer: true
+            });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setClearColor(0x000000, 0);
+            renderer.setPixelRatio(window.devicePixelRatio);
+
+            // Lighting
+            const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
+            scene.add(light);
+
+            // Cargar modelo 3D
+            updateStatus('Cargando modelo 3D...', 'status');
+            const loader = new THREE.GLTFLoader();
+            
+            try {
+                const gltf = await loader.loadAsync('../Modelos/acereros.glb');
+                model = gltf.scene;
+                model.scale.set(0.001, 0.001, 0.001); // Ajustar escala según sea necesario
+                model.position.set(0, 0, 0);
+                
+                // Animar el modelo
+                if (gltf.animations.length > 0) {
+                    const mixer = new THREE.AnimationMixer(model);
+                    gltf.animations.forEach(clip => {
+                        mixer.clipAction(clip).play();
+                    });
+                    scene.userData.mixer = mixer;
+                }
+                
+                scene.add(model);
+                updateStatus('Modelo cargado ✓', 'success');
+            } catch (error) {
+                console.error('Error cargando modelo:', error);
+                updateStatus('Error cargando modelo: ' + error.message, 'error');
+                model = createDefaultModel();
+                scene.add(model);
+            }
+
+            // Ajustar al redimensionar ventana
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        }
+
+        // Crear modelo por defecto (cubo) si falla la carga
+        function createDefaultModel() {
+            const geometry = new THREE.BoxGeometry(0.1, 0.1, 0.1);
+            const material = new THREE.MeshPhongMaterial({ color: 0x0088ff });
+            return new THREE.Mesh(geometry, material);
+        }
+
+        // Acceder a la cámara
+        async function accessCamera() {
+            updateStatus('Solicitando acceso a cámara...', 'status');
+            try {
+                const video = document.getElementById('camera-video');
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: facingMode, width: { ideal: 1280 }, height: { ideal: 720 } },
+                    audio: false
+                });
+                video.srcObject = stream;
+                
+                // Esperar a que el video esté listo
+                video.onloadedmetadata = () => {
+                    updateStatus('Cámara lista ✓', 'success');
+                    console.log('Video metadata loaded');
+                };
+
+                return true;
+            } catch (error) {
+                console.error('Error accediendo a cámara:', error);
+                updateStatus('Error: No se puede acceder a la cámara', 'error');
+                return false;
+            }
+        }
+
+        // Inicializar Mind-AR
+        async function initMindAR() {
+            try {
+                updateStatus('Inicializando Mind-AR...', 'status');
+                
+                // Crear controlador de Mind-AR
+                mindarController = new window.MINDAR.IMAGE.Controller({
+                    filterMinCF: 0.1,
+                    filterBeta: 0.1,
+                    warmupCount: 8
+                });
+
+                // Agregar target (imagen a detectar)
+                await mindarController.addImageTarget('../img/logo-acereros.png');
+
+                // Event listeners
+                mindarController.addEventListener('targetFound', (event) => {
+                    console.log('Target encontrado:', event.targetIndex);
+                    document.getElementById('model-found').classList.add('active');
+                    if (scene.userData.mixer) {
+                        scene.userData.mixer.timeScale = 1;
+                    }
+                });
+
+                mindarController.addEventListener('targetLost', (event) => {
+                    console.log('Target perdido:', event.targetIndex);
+                    document.getElementById('model-found').classList.remove('active');
+                    if (scene.userData.mixer) {
+                        scene.userData.mixer.timeScale = 0;
+                    }
+                });
+
+                updateStatus('Mind-AR listo ✓', 'success');
+                return true;
+            } catch (error) {
+                console.error('Error inicializando Mind-AR:', error);
+                updateStatus('Error Mind-AR: ' + error.message, 'error');
+                return false;
+            }
+        }
+
+        // Iniciar AR
+        async function startAR() {
+            if (isRunning) return;
+
+            updateStatus('Iniciando AR...', 'status');
+            
+            try {
+                // Acceder a cámara
+                const cameraOk = await accessCamera();
+                if (!cameraOk) return;
+
+                // Esperar un poco para que el video esté listo
+                await new Promise(resolve => setTimeout(resolve, 1000));
+
+                // Inicializar Three.js
+                await initThreeScene();
+
+                // Inicializar Mind-AR
+                const mindArOk = await initMindAR();
+                if (!mindArOk) return;
+
+                // Empezar
+                await mindarController.start();
+                isRunning = true;
+
+                // Loop de renderizado
+                const clock = new THREE.Clock();
+                const video = document.getElementById('camera-video');
+
+                const render = () => {
+                    if (!isRunning) return;
+
+                    const dt = clock.getDelta();
+                    if (scene.userData.mixer) {
+                        scene.userData.mixer.update(dt);
+                    }
+
+                    // Actualizar posición del modelo basado en Mind-AR
+                    const state = mindarController.getResultState();
+                    if (state === window.MINDAR.IMAGE.TrackerState.Tracking) {
+                        const pose = mindarController.getResultPose();
+                        if (pose) {
+                            model.position.fromArray(pose.position);
+                            model.quaternion.fromArray(pose.quaternion);
+                        }
+                    }
+
+                    renderer.render(scene, camera);
+                    requestAnimationFrame(render);
+                };
+
+                render();
+                updateStatus('AR activo - Escanea el logo ✓', 'success');
+                document.getElementById('start-btn').style.opacity = '0.5';
+                document.getElementById('stop-btn').style.opacity = '1';
+
+            } catch (error) {
+                console.error('Error iniciando AR:', error);
+                updateStatus('Error: ' + error.message, 'error');
+                isRunning = false;
+            }
+        }
+
+        // Detener AR
+        function stopAR() {
+            if (!isRunning) return;
+
+            try {
+                if (mindarController) {
+                    mindarController.stop();
+                }
+                if (renderer) {
+                    renderer.dispose();
+                }
+                const video = document.getElementById('camera-video');
+                if (video.srcObject) {
+                    video.srcObject.getTracks().forEach(track => track.stop());
+                }
+                isRunning = false;
+                updateStatus('AR detenido', 'status');
+                document.getElementById('start-btn').style.opacity = '1';
+                document.getElementById('stop-btn').style.opacity = '0.5';
+                document.getElementById('model-found').classList.remove('active');
+            } catch (error) {
+                console.error('Error deteniendo AR:', error);
+                updateStatus('Error al detener: ' + error.message, 'error');
+            }
+        }
+
+        // Cambiar cámara
+        function switchCamera() {
+            facingMode = facingMode === 'environment' ? 'user' : 'environment';
+            const video = document.getElementById('camera-video');
+            if (video.srcObject) {
+                video.srcObject.getTracks().forEach(track => track.stop());
+            }
+            if (isRunning) {
+                stopAR();
+                setTimeout(startAR, 500);
+            } else {
+                accessCamera();
+            }
+        }
+
+        // Inicializar al cargar página
+        window.addEventListener('load', () => {
+            updateStatus('Presiona "Iniciar AR" para comenzar', 'status');
+        });
+    </script>
+</body>
+</html>

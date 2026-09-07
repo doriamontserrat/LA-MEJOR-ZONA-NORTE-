@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio - Béisbol Zona Norte</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-light">
+
+    <!-- Contenedor de la App -->
+    <main class="app-main-container">
+        
+        <!-- Encabezado -->
+        <header class="app-header">
+            <div class="header-text">
+                <!-- Sincronizado con el nombre del perfil -->
+                <h1>Hola <span id="user-greeting-name">Usuario</span>!</h1>
+                <p>Explora sobre tu equipo favorito</p>
+            </div>
+            <!-- El logo azul ahora está aquí en la esquina derecha -->
+            <img src="img/logo-azul.png" alt="La Mejor Zona Norte" class="header-logo">
+        </header>
+
+        <!-- Barra de Búsqueda -->
+        <div class="search-container">
+            <input type="text" id="buscador" placeholder="Buscar estadio, equipo o ciudad...">
+        </div>
+
+       <!-- Categorías -->
+        <div class="categories-container">
+            <h2 class="section-title">Principales del dia</h2>
+            <div class="category-chips">
+                <!-- Les agregamos un id a cada botón -->
+                <button class="chip active" id="chip-todos">Mas vistos</button>
+                <button class="chip" id="chip-favoritos">favoritos</button>
+            </div>
+        </div>
+
+        <!-- Tarjetas de Estadios -->
+        <div class="stadium-cards-container">
+            
+            <a href="estadio-sultanes.html" class="stadium-card" data-equipo="Sultanes de Monterrey" data-estadio="Estadio de los Sultanes">
+                <img src="img/estadio-mty.jpg" alt="Estadio de los Sultanes" class="card-bg">
+                <div class="card-gradient"></div>
+                <button class="like-btn">♡</button>
+                <div class="card-info">
+                    <h3>Estadio de los Sultanes</h3>
+                    <p>📍 Monterrey, Nuevo León</p>
+                </div>
+            </a>
+
+            <a href="estadio-monumental.html" class="stadium-card" data-equipo="Dorados de Chihuahua" data-estadio="Estadio Monumental">
+                <img src="img/estadio-chi.jpg" alt="Estadio Monumental" class="card-bg">
+                <div class="card-gradient"></div>
+                <button class="like-btn">♡</button>
+                <div class="card-info">
+                    <h3>Estadio Monumental</h3>
+                    <p>📍 Chihuahua, Chihuahua</p>
+                </div>
+            </a>
+
+            <a href="estadio-chevron.html" class="stadium-card" data-equipo="Toros de Tijuana" data-estadio="Estadio Chevron">
+                <img src="img/estadio-tij.jpg" alt="Estadio Chevron" class="card-bg">
+                <div class="card-gradient"></div>
+                <button class="like-btn">♡</button>
+                <div class="card-info">
+                    <h3>Estadio Chevron</h3>
+                    <p>📍 Tijuana, Baja California</p>
+                </div>
+            </a>
+
+            <a href="estadio-monclova.html" class="stadium-card" data-equipo="Acereros de Monclova" data-estadio="Estadio Kickapoo">
+                <img src="img/estadio-mon.jpg" alt="Estadio Kickapoo Lucky Eagle" class="card-bg">
+                <div class="card-gradient"></div>
+                <button class="like-btn">♡</button>
+                <div class="card-info">
+                    <h3>Estadio Kickapoo</h3>
+                    <p>📍 Monclova, Coahuila</p>
+                </div>
+            </a>
+
+            <a href="estadio-laguna.html" class="stadium-card" data-equipo="Algodoneros de Union Laguna" data-estadio="Estadio Revolucion">
+                <img src="img/estadio-tor.jpg" alt="Estadio Revolución" class="card-bg">
+                <div class="card-gradient"></div>
+                <button class="like-btn">♡</button>
+                <div class="card-info">
+                    <h3>Estadio Revolución</h3>
+                    <p>📍 Torreón, Coahuila</p>
+                </div>
+            </a>
+
+            <a href="estadio-jalisco.html" class="stadium-card" data-equipo="Charros de Jalisco" data-estadio="Estadio Panamericano">
+                <img src="img/estadio-jal.jpg" alt="Estadio Panamericano" class="card-bg">
+                <div class="card-gradient"></div>
+                <button class="like-btn">♡</button>
+                <div class="card-info">
+                    <h3>Estadio Panamericano</h3>
+                    <p>📍 Zapopan, Jalisco</p>
+                </div>
+            </a>
+
+            <a href="estadio-tecolotes.html" class="stadium-card" data-equipo="Tecolotes de los Dos Laredos" data-estadio="Parque La Junta">
+                <img src="img/estadio-lar.jpeg" alt="Parque La Junta" class="card-bg">
+                <div class="card-gradient"></div>
+                <button class="like-btn">♡</button>
+                <div class="card-info">
+                    <h3>Parque La Junta</h3>
+                    <p>📍 Nuevo Laredo, Tamps.</p>
+                </div>
+            </a>
+
+            <a href="estadio-saltillo.html" class="stadium-card" data-equipo="Saraperos de Saltillo" data-estadio="Estadio Francisco I. Madero">
+                <img src="img/estadio-sal.jpg" alt="Estadio Francisco I. Madero" class="card-bg">
+                <div class="card-gradient"></div>
+                <button class="like-btn">♡</button>
+                <div class="card-info">
+                    <h3>Estadio Fco. I. Madero</h3>
+                    <p>📍 Saltillo, Coahuila</p>
+                </div>
+            </a>
+
+            <a href="estadio-durango.html" class="stadium-card" data-equipo="Caliente de Durango" data-estadio="Estadio Francisco Villa">
+                <img src="img/estadio-dur.jpg" alt="Estadio Francisco Villa" class="card-bg">
+                <div class="card-gradient"></div>
+                <button class="like-btn">♡</button>
+                <div class="card-info">
+                    <h3>Estadio Francisco Villa</h3>
+                    <p>📍 Durango, Durango</p>
+                </div>
+            </a>
+
+            <a href="estadio-aguascalientes.html" class="stadium-card" data-equipo="Rieleros de Aguascalientes" data-estadio="Parque Romo Chavez">
+                <img src="img/estadio-agu.jpg" alt="Parque Alberto Romo Chávez" class="card-bg">
+                <div class="card-gradient"></div>
+                <button class="like-btn">♡</button>
+                <div class="card-info">
+                    <h3>Parque Romo Chávez</h3>
+                    <p>📍 Aguascalientes, Ags.</p>
+                </div>
+            </a>
+
+        </div>
+    </main>
+
+    <!-- Menú de Navegación Inferior -->
+    <nav class="bottom-nav">
+        <a href="principal.html" class="nav-item active">
+            <img src="iconos/inicio.png" alt="Inicio" class="nav-icon">
+        </a>
+        <a href="juego.html" class="nav-item">
+            <img src="iconos/juego.png" alt="Juegos" class="nav-icon">
+        </a>
+        <a href="escaner.html" class="nav-item">
+            <img src="iconos/camara.png" alt="Cámara" class="nav-icon">
+        </a>
+        <a href="quiz.html" class="nav-item">
+            <img src="iconos/tablero.png" alt="Tablero" class="nav-icon">
+        </a>
+        <!-- Este enlace te lleva a tu menú de perfil, y ahora la imagen se actualizará sola -->
+        <a href="menu-perfil.html" class="nav-item">
+            <img src="img/avatar.jpg" alt="Perfil" class="nav-icon nav-avatar" id="nav-avatar-img">
+        </a>
+    </nav>
+
+    <script src="js/principal.js"></script>
+
+</body>
+</html>

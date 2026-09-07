@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escanear Logo - La Mejor Zona Norte</title>
+    <link rel="stylesheet" href="../style.css">
+     <link rel="stylesheet" href="../escaner.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+    
+</head>
+<body>
+
+    <!-- Logo en el fondo blanco -->
+    <img src="../img/logo-dorados.png" alt="Marca de agua" class="page-watermark-bg">
+
+    <!-- CONTENEDOR CON BORDE BLANCO -->
+    <div class="camera-framed-wrapper">
+
+        <!-- CÁMARA / ESCÁNER -->
+        <div id="vista-camara" class="scanner-main-container">
+            
+            <div class="debug-status" id="debug-status">Cargando...</div>
+            <a href="principal.html" class="escaner-back-btn">❮</a>
+
+            <a-scene id="ar-scene"
+               mindar-image="imageTargetSrc: ../Escaneo/targets.mind; autoStart: true; uiScanning: no; uiLoading: no; uiError: no;"
+               color-space="sRGB"
+               renderer="colorManagement: true, physicallyCorrectLights, alpha: true"
+               vr-mode-ui="enabled: false"
+               device-orientation-permission-ui="enabled: false">
+                <a-assets timeout="20000">
+                    <a-asset-item id="modelo-acereros-asset" src="../Modelos/acereros.glb"></a-asset-item> //MI MODELO MAUASHJDJKSHDJKHWSJK
+                </a-assets>
+
+                <a-camera position="0 0 0" look-controls="enabled: false" cursor="fuse: false" raycaster="far: 10000; objects: .clickable"></a-camera>
+
+                <a-entity id="target-acereros" mindar-image-target="targetIndex: 0">
+                    <a-gltf-model
+                        src="#modelo-acereros-asset"
+                        position="0 0 0"
+                        rotation="0 0 0"
+                       scale="0.25 0.25 0.25">
+                    </a-gltf-model>
+                </a-entity>
+            </a-scene>
+            <canvas id="foto-canvas" style="display: none;"></canvas>
+
+            <!-- MARCO MORADO DE ESCANEO -->
+            <div class="scanner-target">
+                <div class="scanner-corner top-left"></div>
+                <div class="scanner-corner top-right"></div>
+                <div class="scanner-corner bottom-left"></div>
+                <div class="scanner-corner bottom-right"></div>
+                <div class="laser-line"></div>
+            </div>
+
+            <div class="zoom-slider">
+                <span>-</span>
+                <input type="range" min="1" max="100" value="30" class="slider">
+                <span>+</span>
+            </div>
+
+            <!-- BARRA INFERIOR -->
+            <div class="scanner-bottom-bar">
+                <div class="bottom-bar-group">
+                    <div class="scanner-tab" id="btn-recompensa">
+                        <img src="../iconos/premio.png" alt="Premio" class="tab-custom-icon">
+                        <span class="tab-text">Premio</span>
+                    </div>
+                    <div class="scanner-tab" id="btn-cambiar-filtro">
+                        <img src="../iconos/filtro.png" alt="Filtro" class="tab-custom-icon">
+                        <span class="tab-text">Datos</span>
+                    </div>
+                </div>
+                
+                <button id="btn-escanear" class="btn-scan-action">
+                    <div class="qr-icon-sim"></div>
+                </button>
+                
+                <div class="bottom-bar-group">
+                    <div class="scanner-tab" id="btn-guardar-foto">
+                        <img src="../iconos/guardar.png" alt="Guardar" class="tab-custom-icon">
+                        <span class="tab-text">Guardar</span>
+                    </div>
+                    <div class="scanner-tab" id="btn-girar-camara">
+                        <img src="../iconos/voltear.png" alt="Girar" class="tab-custom-icon">
+                        <span class="tab-text" id="texto-camara">Trasera</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VISTA DE RESULTADO -->
+        <main id="vista-resultado" class="scan-result-container" style="display: none;">
+            <header class="result-header">
+                <button id="btn-volver-camara" class="back-dark-btn">❮</button>
+                <h1 class="result-title">Escaneo de logo</h1>
+                <div class="spacer"></div>
+            </header>
+
+            <div class="scanned-logo-wrapper">
+                <img src="../img/logo-dorados.png" alt="Dorados de Chihuahua" class="scanned-logo-img">
+            </div>
+
+            <div class="info-card-dark">
+                <p class="unlock-subtitle">Nuevo Logo desbloqueado</p>
+                <h2 class="team-name-title">LOS DORADOS DE CHIHUAHUA</h2>
+                <p class="fun-fact-label">DATO CURIOSO:</p>
+                <p class="fun-fact-text">
+                    El nombre de los Dorados de Chihuahua viene de los legendarios "Dorados de Villa", la guardia de élite de Pancho Villa durante la Revolución Mexicana.
+                </p>
+            </div>
+
+            <div class="result-actions-grid">
+                <button class="action-sq-btn" id="btn-compartir-resultado">
+                    <img src="../iconos/compartir.png" alt="Compartir" class="sq-custom-icon">
+                    <span class="sq-text">COMPARTIR</span>
+                </button>
+                <button class="action-sq-btn" id="btn-info-resultado">
+                    <img src="../iconos/informacion.png" alt="Info" class="sq-custom-icon">
+                    <span class="sq-text">INFO</span>
+                </button>
+                <button class="action-sq-btn" id="btn-inicio-resultado" onclick="window.location.href='principal.html'">
+                    <img src="../iconos/inicio.png" alt="Inicio" class="sq-custom-icon">
+                    <span class="sq-text">INICIO</span>
+                </button>
+            </div>
+        </main>
+
+        <!-- MODAL EQUIPO -->
+        <div id="modal-equipo" class="modal-overlay" style="display: none;">
+            <div class="modal-content-bottom">
+                <button id="btn-cerrar-modal" class="modal-close-btn">×</button>
+                <div class="modal-equipo-info">
+                    <h2 class="modal-equipo-nombre" id="modal-equipo-nombre">RIELEROS DE AGUASCALIENTES</h2>
+                    <div class="modal-equipo-desc">
+                        <p id="modal-equipo-desc">Fundados en 1975, han forjado una identidad única ligada a la historia ferroviaria del estado de Aguascalientes.</p>
+                    </div>
+                    <div class="modal-actions">
+                        <button id="btn-ver-mas-equipo" class="btn-modal-primary">Ver Ficha Completa</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="../js/escaner.js"></script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Charros de Jalisco - La Mejor Zona Norte</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-ficha">
+    <script>if (!localStorage.getItem('userEmail')) { window.location.href = 'index.html'; }</script>
+
+    <div class="team-top-bar">
+        <img src="img/logo-charros.png" alt="Charros de Jalisco" class="team-logo">
+        <img src="img/logo-blanco.png" alt="La Mejor Zona Norte" class="app-logo">
+    </div>
+
+    <main class="ficha-container">
+        <div class="ficha-hero">
+            <a href="principal.html" class="ficha-back">❮</a>
+            <button class="ficha-like">♡</button>
+            <img src="img/estadio-jal.jpg" alt="Estadio Panamericano" class="ficha-img">
+            <div class="ficha-gradient"></div>
+            <div class="ficha-info-overlay">
+                <h2>Estadio Panamericano</h2>
+                <p>📍 Zapopan, Jalisco</p>
+            </div>
+        </div>
+
+        <div class="ficha-body">
+            <h1 class="ficha-team-title">CHARROS DE JALISCO</h1>
+            
+            <h3 class="ficha-subtitle">Historia</h3>
+            <p class="ficha-text">Ubicados en Zapopan, los Charros combinan la tradición del mariachi y el folclor mexicano con un nivel competitivo de primer nivel en la pelota veraniega e invernal.</p>
+
+            <button id="btn-ver-mas" class="btn-primary ficha-btn">Ver mas</button>
+
+            <div id="contenido-extra" class="ficha-extra-info" style="display: none;">
+                <h3 class="ficha-subtitle">Inicios del Equipo</h3>
+                <p class="ficha-text">Aunque con raíces históricas profundas en el béisbol tapatío, la actual etapa en la Liga Mexicana ha traído grandes emociones a Jalisco.</p>
+
+                <h3 class="ficha-subtitle">Campeonatos</h3>
+                <p class="ficha-text">Un referente absoluto en la Liga Mexicana del Pacífico (LMP) con múltiples títulos y destacadas participaciones en la Serie del Caribe.</p>
+
+                <h3 class="ficha-subtitle">Jugadores Estrella Clásicos</h3>
+                <ul class="ficha-list">
+                    <li>⭐ Benjamín Gil</li>
+                    <li>⭐ Japhet Amador</li>
+                    <li>⭐ Dariel Álvarez</li>
+                    <li>⭐ José Manuel Rodríguez</li>
+                </ul>
+
+                <h3 class="ficha-subtitle">Jugadas Destacadas</h3>
+                <div class="video-container">
+                    <iframe width="100%" height="200" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const btnVerMas = document.getElementById('btn-ver-mas');
+        const contenidoExtra = document.getElementById('contenido-extra');
+        btnVerMas.addEventListener('click', function() {
+            contenidoExtra.style.display = 'block';
+            btnVerMas.style.display = 'none';
+        });
+
+        const btnLike = document.querySelector('.ficha-like');
+        const equipoActual = 'Charros de Jalisco';
+        let favoritos = JSON.parse(localStorage.getItem('misFavoritos')) || [];
+        if (favoritos.includes(equipoActual)) {
+            btnLike.classList.add('liked'); btnLike.textContent = '♥'; btnLike.style.color = '#ff3b30'; 
+        }
+        btnLike.addEventListener('click', function() {
+            let favs = JSON.parse(localStorage.getItem('misFavoritos')) || [];
+            this.classList.toggle('liked');
+            if(this.classList.contains('liked')) {
+                this.textContent = '♥'; this.style.color = '#ff3b30';
+                if (!favs.includes(equipoActual)) favs.push(equipoActual);
+            } else {
+                this.textContent = '♡'; this.style.color = 'white';
+                favs = favs.filter(e => e !== equipoActual);
+            }
+            localStorage.setItem('misFavoritos', JSON.stringify(favs));
+        });
+    </script>
+</body>
+</html>

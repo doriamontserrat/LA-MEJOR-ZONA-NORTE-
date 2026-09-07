@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio de Sesión - La Mejor Zona Norte</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <main class="login-container">
+        <!-- SECCIÓN IZQUIERDA: Formulario -->
+        <section class="login-form-section">
+            <div class="form-wrapper">
+                
+                <img src="img/logo-azul.png" alt="Logo La Mejor Zona Norte" class="logo-form">
+                
+                <h1>Crea una cuenta</h1>
+                <p class="subtitle">Ingresa tu correo electrónico para registrarte en esta aplicación</p>
+                
+                <!-- Añadido id="login-form" para controlar el evento -->
+                <form id="login-form">
+                    <!-- Campo de correo con id="login-email" -->
+                    <input type="email" id="login-email" placeholder="correo electronico" required class="input-email">
+                    
+                    <!-- Campo de contraseña con id="login-password" -->
+                    <input type="password" id="login-password" placeholder="contraseña" required class="input-password">
+                    
+                    <button type="submit" class="btn-primary">Continuar</button>
+                </form>
+                
+                <div class="divider">
+                    <span>o</span>
+                </div>
+                
+                <div class="social-login">
+                    <button class="btn-secondary">
+                        <img src="img/google-icon.png" alt="Google"> Continuar con Google
+                    </button>
+                </div>
+                
+                <p class="signup-link">
+                    ¿No tienes cuenta? <a href="perfil.html">Registrate</a>
+                </p>
+                
+                <p class="terms">
+                    Al hacer clic en continuar, aceptas nuestros 
+                    <a href="#">Términos de servicio</a> y <a href="#">Política de privacidad</a>
+                </p>
+            </div>
+        </section>
+
+        <!-- SECCIÓN DERECHA: Panel Azul (Se mantiene igual para PC) -->
+        <section class="login-branding-section">
+            <div class="branding-content">
+                <img src="img/logo-blanco.png" alt="Logo Blanco" class="logo-branding">
+                <h2>Lo mejor del Béisbol de la Zona norte lo encuentras aquí</h2>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const loginForm = document.getElementById('login-form');
+
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault(); 
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            // Guardamos el correo y contraseña
+            localStorage.setItem('userEmail', email);
+            localStorage.setItem('userPassword', password);
+            
+            // Redirigimos a PRINCIPAL después de registrarse
+            window.location.href = 'principal.html';
+        });
+    </script>
+</body>
+</html>

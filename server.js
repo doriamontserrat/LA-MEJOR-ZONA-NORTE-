@@ -5,15 +5,15 @@ const app = express();
 
 app.use(express.json());
 
-// 1. Servir la carpeta 'html' como estática (para que /principal.html busque automáticamente en /html)
-app.use(express.static(path.join(__dirname, 'html')));
+// Servir archivos estáticos desde 'Procesamiento de imagen' y sus subcarpetas
+app.use(express.static(path.join(__dirname, 'Procesamiento de imagen')));
 
-// 2. Servir recursos de la raíz y subcarpetas (js, img, style.css, etc.)
+// Servir recursos de la raíz también
 app.use(express.static(__dirname));
 
 // Ruta raíz (abre index.html por defecto)
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'html', 'index.html'));
+    res.sendFile(path.join(__dirname, 'Procesamiento de imagen', 'index.html'));
 });
 
 // En el entorno de Vercel es crítico usar process.env.PORT

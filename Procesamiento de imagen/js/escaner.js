@@ -29,18 +29,37 @@
         const btnCerrarModal = document.getElementById('btn-cerrar-modal');
         const btnVerMasEquipo = document.getElementById('btn-ver-mas-equipo');
 
-        // Datos de equipos
+        // Datos de equipos mapeados por targetIndex
         const equiposData = {
-            default: {
+            0: {
+                nombre: 'ACEREROS DE CHIHUAHUA',
+                descripcion: 'Los Acereros de Chihuahua, fundados en 1983, representan la tradición y la fuerza del acero del estado de Chihuahua.',
+                url: 'estadio-monumental.html'
+            },
+            1: {
                 nombre: 'RIELEROS DE AGUASCALIENTES',
                 descripcion: 'Fundados en 1975, han forjado una identidad única ligada a la historia ferroviaria del estado de Aguascalientes.',
                 url: 'estadio-aguascalientes.html'
+            },
+            2: {
+                nombre: 'TORTOS DE TLAXCALA',
+                descripcion: 'Leyenda y tradición de Tlaxcala, los Tortos llevan en su nombre la historia del estado y su identidad cultural.',
+                url: 'estadio-sultanes.html'
             }
         };
 
-        // servira para cuando funcione scanner
+        // Mapeo de targets para acceso fácil
+        const targetMap = {
+            0: { elemento: 'target-acereros', nombre: 'acereros' },
+            1: { elemento: 'target-rieleros', nombre: 'rieleros' },
+            2: { elemento: 'target-toros', nombre: 'toros' }
+        };
+
+        let targetActual = null;
+
+        // Mostrar datos del equipo detectado
         btnCambiarFiltro.addEventListener('click', () => {
-            const equipo = equiposData.default;
+            const equipo = targetActual !== null ? equiposData[targetActual] : equiposData[0];
             document.getElementById('modal-equipo-nombre').textContent = equipo.nombre;
             document.getElementById('modal-equipo-desc').textContent = equipo.descripcion;
             btnVerMasEquipo.dataset.url = equipo.url;
@@ -240,22 +259,20 @@
             actualizarDebug('✓ Esperando escena AR...');
 
             const escenaAR = document.querySelector('#ar-scene');
-            const targetAcereros = document.querySelector('#target-acereros');
-
-            if (!escenaAR || !targetAcereros) {
-                actualizarDebug('❌ No se encontró #ar-scene o #target-acereros');
+            if (!escenaAR) {
+                actualizarDebug('❌ No se encontró #ar-scene');
                 return;
             }
 
             const scannerTarget = document.querySelector('.scanner-target');
+            const msgTips = 'Apunta a los logos\npara ver los modelos 3D';
 
             escenaAR.addEventListener('renderstart', () => {
                 actualizarDebug('✓ A-Frame listo, iniciando cámara...');
             });
 
             escenaAR.addEventListener('arReady', () => {
-                actualizarDebug('✓ Cámara iniciada\n\nApunta al logo-acereros.png\npara que aparezca el modelo 3D');
-                // A-Frame/Mind-AR inyecta su propio <video>; lo usamos para guardar fotos meow :3
+                actualizarDebug('✓ Cámara iniciada\n\n' + msgTips);
                 video = document.querySelector('video');
             });
 
@@ -263,31 +280,30 @@
                 actualizarDebug('❌ Error iniciando la cámara AR.\nVerifica permisos de cámara.');
             });
 
-            targetAcereros.addEventListener('targetFound', () => {
-                actualizarDebug('✓✓✓ LOGO DETECTADO ✓✓✓');
-                if (scannerTarget) {
-                    scannerTarget.style.borderColor = '#4cd964';
-                    scannerTarget.style.boxShadow = '0 0 20px #4cd964';
-                }
-            });
+            // Configurar listeners para cada target
+            Object.entries(targetMap).forEach(([index, target]) => {
+                const targetElement = document.querySelector('#' + target.elemento);
+                if (!targetElement) return;
 
-            targetAcereros.addEventListener('targetLost', () => {
-                actualizarDebug('Logo perdido. Apunta al logo...');
-                if (scannerTarget) {
-                    scannerTarget.style.borderColor = '';
-                    scannerTarget.style.boxShadow = '';
-                }
-            });
+                targetElement.addEventListener('targetFound', () => {
+                    targetActual = parseInt(index);
+                    const equipo = equiposData[targetActual];
+                    actualizarDebug(`✓✓✓ ${equipo.nombre} DETECTADO ✓✓✓`);
+                    if (scannerTarget) {
+                        scannerTarget.style.borderColor = '#4cd964';
+                        scannerTarget.style.boxShadow = '0 0 20px #4cd964';
+                    }
+                });
 
-          // En lugar de rotar 'a-gltf-model', rotamos la entidad pivote
-           // const pivoteEl = escenaAR.querySelector('#pivote-modelo');
-            //if (pivoteEl) {
-               // let angulo = 0;
-                //setInterval(() => {
-                    //angulo = (angulo + 2) % 360;
-                    //pivoteEl.setAttribute('rotation', `0 ${angulo} 0`);
-               // }, 33);
-           // }
+                targetElement.addEventListener('targetLost', () => {
+                    actualizarDebug('Logo perdido. Apunta al logo...');
+                    if (scannerTarget) {
+                        scannerTarget.style.borderColor = '';
+                        scannerTarget.style.boxShadow = '';
+                    }
+                    targetActual = null;
+                });
+            });
         }
 
         // Esperar a que el DOM y el custom element <a-scene> estén listos

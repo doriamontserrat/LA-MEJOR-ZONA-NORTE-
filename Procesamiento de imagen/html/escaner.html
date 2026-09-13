@@ -32,23 +32,32 @@
                vr-mode-ui="enabled: false"
                device-orientation-permission-ui="enabled: false">
                 <a-assets timeout="20000">
-                    <a-asset-item id="modelo-acereros-asset" src="/Modelos/acereross.glb"></a-asset-item> //MI MODELO MAUASHJDJKSHDJKHWSJK
+                    <a-asset-item id="modelo-acereros-asset" src="/Modelos/acereross.glb"></a-asset-item>
+                    <a-asset-item id="modelo-rieleros-asset" src="/Modelos/RIELEROS.glb"></a-asset-item>
+                    <a-asset-item id="modelo-toros-asset" src="/Modelos/toros.glb"></a-asset-item>
                 </a-assets>
 
                 <a-camera position="0 0 0" look-controls="enabled: false" cursor="fuse: false" raycaster="far: 10000; objects: .clickable"></a-camera>
 
-               <a-entity id="target-acereros" mindar-image-target="targetIndex: 0">
-                <a-entity 
-                    id="pivote-modelo" 
-                    position="0 0 0"
-                    animation="property: rotation; to: 0 360 0; loop: true; dur: 8000; easing: linear">
-                    
-                    <a-gltf-model 
-                    src="#modelo-acereros-asset"
-                    position="0 0 0.1"
-                    scale="0.25 0.25 0.25">
-                    </a-gltf-model>
+                <!-- TARGET 0: ACEREROS -->
+                <a-entity id="target-acereros" mindar-image-target="targetIndex: 0" class="team-target">
+                    <a-entity id="pivote-acereros" position="0 0 0" animation="property: rotation; from: 0 0 0; to: 0 360 0; loop: true; dur: 8000; easing: linear">
+                        <a-gltf-model src="#modelo-acereros-asset" position="0 0 0.1" scale="0.25 0.25 0.25"></a-gltf-model>
+                    </a-entity>
                 </a-entity>
+
+                <!-- TARGET 1: RIELEROS -->
+                <a-entity id="target-rieleros" mindar-image-target="targetIndex: 1" class="team-target">
+                    <a-entity id="pivote-rieleros" position="0 0 0" animation="property: rotation; from: 0 0 0; to: 0 360 0; loop: true; dur: 8000; easing: linear">
+                        <a-gltf-model src="#modelo-rieleros-asset" position="0 0 0.1" scale="0.25 0.25 0.25"></a-gltf-model>
+                    </a-entity>
+                </a-entity>
+
+                <!-- TARGET 2: TORTOS -->
+                <a-entity id="target-toros" mindar-image-target="targetIndex: 2" class="team-target">
+                    <a-entity id="pivote-toros" position="0 0 0" animation="property: rotation; from: 0 0 0; to: 0 360 0; loop: true; dur: 8000; easing: linear">
+                        <a-gltf-model src="#modelo-toros-asset" position="0 0 0.1" scale="0.25 0.25 0.25"></a-gltf-model>
+                    </a-entity>
                 </a-entity>
 
 

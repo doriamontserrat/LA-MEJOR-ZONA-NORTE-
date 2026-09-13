@@ -280,15 +280,29 @@
                 actualizarDebug('❌ Error iniciando la cámara AR.\nVerifica permisos de cámara.');
             });
 
-            // Configurar listeners para cada target
+            // Mapeo de targetIndex → id del pivote
+            const pivoteMap = {
+                0: 'pivote-acereros',
+                1: 'pivote-rieleros',
+                2: 'pivote-toros'
+            };
+
+            // En iniciarMindAR(), dentro del forEach:
             Object.entries(targetMap).forEach(([index, target]) => {
                 const targetElement = document.querySelector('#' + target.elemento);
                 if (!targetElement) return;
+
+                const pivoteId = pivoteMap[index];
+                const pivote = document.querySelector('#' + pivoteId);
 
                 targetElement.addEventListener('targetFound', () => {
                     targetActual = parseInt(index);
                     const equipo = equiposData[targetActual];
                     actualizarDebug(`✓✓✓ ${equipo.nombre} DETECTADO ✓✓✓`);
+
+                    // 🔑 Mostrar SOLO este pivote
+                    if (pivote) pivote.setAttribute('visible', true);
+
                     if (scannerTarget) {
                         scannerTarget.style.borderColor = '#4cd964';
                         scannerTarget.style.boxShadow = '0 0 20px #4cd964';
@@ -297,6 +311,10 @@
 
                 targetElement.addEventListener('targetLost', () => {
                     actualizarDebug('Logo perdido. Apunta al logo...');
+
+                    // 🔑 Ocultar SOLO este pivote
+                    if (pivote) pivote.setAttribute('visible', false);
+
                     if (scannerTarget) {
                         scannerTarget.style.borderColor = '';
                         scannerTarget.style.boxShadow = '';

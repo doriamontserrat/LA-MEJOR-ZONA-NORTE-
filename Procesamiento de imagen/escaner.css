@@ -161,3 +161,14 @@ video,
     /* Opcional: una sombra sutil para que se vea bien sobre fondos claros u oscuros */
     filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5));
 }
+
+/* OCULTAR BOTÓN DE PAUSA/PLAY POR DEFECTO */
+.btn-play-flotante.oculto {
+    display: none !important;
+    pointer-events: none !important;
+}
+
+.btn-play-flotante.visible {
+    display: flex !important;
+    pointer-events: auto !important;
+}

@@ -74,6 +74,15 @@
 
         let targetActual = null;
 
+        // Mapeo de pivotes para las animaciones
+        const pivoteMap = {
+            0: 'pivote-sultanes',
+            1: 'pivote-acereros',
+            2: 'pivote-algodoneros',
+            3: 'pivote-toros',
+            4: 'pivote-charros'
+        };
+
         // Mostrar datos del equipo detectado
         btnCambiarFiltro.addEventListener('click', () => {
             const equipo = targetActual !== null ? equiposData[targetActual] : equiposData[0];
@@ -300,11 +309,11 @@
 
             btnPlayPausa.addEventListener('click', () => {
                 const pivotes = [
-                    'pivote-sultanes',
-                    'pivote-acereros',
-                    'pivote-algodoneros',
-                    'pivote-toros',
-                    'pivote-charros'
+                    pivoteMap[0],
+                    pivoteMap[1],
+                    pivoteMap[2],
+                    pivoteMap[3],
+                    pivoteMap[4]
                 ];
 
                 animacionPausada = !animacionPausada;
@@ -348,6 +357,10 @@
                     // 🔑 Mostrar SOLO este pivote
                     if (pivote) pivote.setAttribute('visible', true);
 
+                    // 🔑 MOSTRAR BOTÓN DE PAUSA/PLAY
+                    btnPlayPausa.classList.remove('oculto');
+                    btnPlayPausa.classList.add('visible');
+
                     if (scannerTarget) {
                         scannerTarget.style.borderColor = '#4cd964';
                         scannerTarget.style.boxShadow = '0 0 20px #4cd964';
@@ -360,6 +373,10 @@
                     // 🔑 Ocultar SOLO este pivote
                     if (pivote) pivote.setAttribute('visible', false);
 
+                    // 🔑 OCULTAR BOTÓN DE PAUSA/PLAY
+                    btnPlayPausa.classList.remove('visible');
+                    btnPlayPausa.classList.add('oculto');
+
                     if (scannerTarget) {
                         scannerTarget.style.borderColor = '';
                         scannerTarget.style.boxShadow = '';
@@ -368,6 +385,9 @@
                 });
             });
         }
+
+        // OCULTAR BOTÓN DE PAUSA/PLAY POR DEFECTO
+        btnPlayPausa.classList.add('oculto');
 
         // Esperar a que el DOM y el custom element <a-scene> estén listos
         if (document.readyState === 'loading') {

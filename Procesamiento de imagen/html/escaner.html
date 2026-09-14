@@ -32,37 +32,54 @@
                vr-mode-ui="enabled: false"
                device-orientation-permission-ui="enabled: false">
                 <a-assets timeout="20000">
+                    <a-asset-item id="modelo-sultanes-asset" src="/Modelos/sultanes.glb"></a-asset-item>
                     <a-asset-item id="modelo-acereros-asset" src="/Modelos/acereross.glb"></a-asset-item>
-                    <a-asset-item id="modelo-rieleros-asset" src="/Modelos/RIELEROS.glb"></a-asset-item>
+                    <a-asset-item id="modelo-algodoneros-asset" src="/Modelos/algodoneros.glb"></a-asset-item>
                     <a-asset-item id="modelo-toros-asset" src="/Modelos/toros.glb"></a-asset-item>
+                    <a-asset-item id="modelo-charros-asset" src="/Modelos/charros.glb"></a-asset-item>
                 </a-assets>
 
                 <a-camera position="0 0 0" look-controls="enabled: false" cursor="fuse: false" raycaster="far: 10000; objects: .clickable"></a-camera>
 
-                <!-- TARGET 0: ACEREROS -->
-                <a-entity id="target-acereros" mindar-image-target="targetIndex: 0">
+                <!-- TARGET 0: SULTANES -->
+                <a-entity id="target-sultanes" mindar-image-target="targetIndex: 0">
+                    <a-entity id="pivote-sultanes" position="0 0 0" visible="false"
+                            animation="property: rotation; from: 0 0 0; to: 0 360 0; loop: true; dur: 8000; easing: linear">
+                        <a-gltf-model src="#modelo-sultanes-asset" position="0 0 0.1" scale="0.25 0.25 0.25"></a-gltf-model>
+                    </a-entity>
+                </a-entity>
+
+                <!-- TARGET 1: ACEREROS -->
+                <a-entity id="target-acereros" mindar-image-target="targetIndex: 1">
                     <a-entity id="pivote-acereros" position="0 0 0" visible="false"
                             animation="property: rotation; from: 0 0 0; to: 0 360 0; loop: true; dur: 8000; easing: linear">
                         <a-gltf-model src="#modelo-acereros-asset" position="0 0 0.1" scale="0.25 0.25 0.25"></a-gltf-model>
                     </a-entity>
                 </a-entity>
 
-                <!-- TARGET 1: RIELEROS -->
-                <a-entity id="target-rieleros" mindar-image-target="targetIndex: 1">
-                    <a-entity id="pivote-rieleros" position="0 0 0" visible="false"
+                <!-- TARGET 2: ALGODONEROS -->
+                <a-entity id="target-algodoneros" mindar-image-target="targetIndex: 2">
+                    <a-entity id="pivote-algodoneros" position="0 0 0" visible="false"
                             animation="property: rotation; from: 0 0 0; to: 0 360 0; loop: true; dur: 8000; easing: linear">
-                        <a-gltf-model src="#modelo-rieleros-asset" position="0 0 0.1" scale="0.25 0.25 0.25"></a-gltf-model>
+                        <a-gltf-model src="#modelo-algodoneros-asset" position="0 0 0.1" scale="0.25 0.25 0.25"></a-gltf-model>
                     </a-entity>
                 </a-entity>
 
-                <!-- TARGET 2: TOROS -->
-                <a-entity id="target-toros" mindar-image-target="targetIndex: 2">
+                <!-- TARGET 3: TOROS -->
+                <a-entity id="target-toros" mindar-image-target="targetIndex: 3">
                     <a-entity id="pivote-toros" position="0 0 0" visible="false"
                             animation="property: rotation; from: 0 0 0; to: 0 360 0; loop: true; dur: 8000; easing: linear">
                         <a-gltf-model src="#modelo-toros-asset" position="0 0 0.1" scale="0.25 0.25 0.25"></a-gltf-model>
                     </a-entity>
                 </a-entity>
 
+                <!-- TARGET 4: CHARROS -->
+                <a-entity id="target-charros" mindar-image-target="targetIndex: 4">
+                    <a-entity id="pivote-charros" position="0 0 0" visible="false"
+                            animation="property: rotation; from: 0 0 0; to: 0 360 0; loop: true; dur: 8000; easing: linear">
+                        <a-gltf-model src="#modelo-charros-asset" position="0 0 0.1" scale="0.25 0.25 0.25"></a-gltf-model>
+                    </a-entity>
+                </a-entity>
 
             </a-scene>
             <canvas id="foto-canvas" style="display: none;"></canvas>
@@ -82,6 +99,11 @@
                 <span>+</span>
             </div>
 
+
+            <button id="btn-play-pausa" class="btn-play-flotante">
+                <img src="../img/Pause.png" alt="Pausa" id="icono-play-pausa">
+            </button>
+
             <!-- BARRA INFERIOR -->
             <div class="scanner-bottom-bar">
                 <div class="bottom-bar-group">
@@ -89,11 +111,14 @@
                         <img src="../iconos/premio.png" alt="Premio" class="tab-custom-icon">
                         <span class="tab-text">Premio</span>
                     </div>
+
                     <div class="scanner-tab" id="btn-cambiar-filtro">
                         <img src="../iconos/filtro.png" alt="Filtro" class="tab-custom-icon">
                         <span class="tab-text">Datos</span>
                     </div>
                 </div>
+
+
                 
                 <button id="btn-escanear" class="btn-scan-action">
                     <div class="qr-icon-sim"></div>

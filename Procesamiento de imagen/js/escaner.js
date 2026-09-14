@@ -12,7 +12,10 @@
         const textoCamara = document.getElementById('texto-camara');
         const btnCompartirResultado = document.getElementById('btn-compartir-resultado');
         const btnInfoResultado = document.getElementById('btn-info-resultado');
+        const btnPlayPausa = document.getElementById('btn-play-pausa');
+        const iconoPlayPausa = document.getElementById('icono-play-pausa');
 
+        let animacionPausada = false;
         let video = null; // se asigna cuando Mind-AR arranca su propia cámara
         let usandoCamaraTrasera = true;
 
@@ -32,28 +35,42 @@
         // Datos de equipos mapeados por targetIndex
         const equiposData = {
             0: {
-                nombre: 'ACEREROS DE CHIHUAHUA',
-                descripcion: 'Los Acereros de Chihuahua, fundados en 1983, representan la tradición y la fuerza del acero del estado de Chihuahua.',
+                nombre: 'SULTANES DE MONTERREY',
+                descripcion: 'Los Sultanes de Monterrey, fundados en 1939, son uno de los equipos más emblemáticos de la Liga Mexicana de Béisbol.',
                 url: 'estadio-monumental.html'
             },
             1: {
-                nombre: 'RIELEROS DE AGUASCALIENTES',
-                descripcion: 'Fundados en 1975, han forjado una identidad única ligada a la historia ferroviaria del estado de Aguascalientes.',
-                url: 'estadio-aguascalientes.html'
+                nombre: 'ACEREROS DE CHIHUAHUA',
+                descripcion: 'Los Acereros de Chihuahua, fundados en 1983, representan la tradición y la fuerza del acero del estado de Chihuahua.',
+                url: 'estadio-acereros.html'
             },
             2: {
-                nombre: 'TORTOS DE TLAXCALA',
-                descripcion: 'Leyenda y tradición de Tlaxcala, los Tortos llevan en su nombre la historia del estado y su identidad cultural.',
-                url: 'estadio-sultanes.html'
+                nombre: 'ALGODONEROS DE GUADALAJARA',
+                descripcion: 'Los Algodoneros de Guadalajara, fundados en 1975, son un equipo con una rica historia en la Liga Mexicana de Béisbol.',
+                url: 'estadio-algodoneros.html'
+            },
+            3: {
+                nombre: 'TOROS DE TLAXCALA',
+                descripcion: 'Leyenda y tradición de Tlaxcala, los Toros llevan en su nombre la historia del estado y su identidad cultural.',
+                url: 'estadio-toros.html'
+            },
+            4: {
+                nombre: 'CHARROS DE JALISCO',
+                descripcion: 'Los Charros de Jalisco, fundados en 1946, son un equipo con una rica tradición en la Liga Mexicana de Béisbol.',
+                url: 'estadio-charros.html'
             }
         };
+        
 
         // Mapeo de targets para acceso fácil
-        const targetMap = {
-            0: { elemento: 'target-acereros', nombre: 'acereros' },
-            1: { elemento: 'target-rieleros', nombre: 'rieleros' },
-            2: { elemento: 'target-toros', nombre: 'toros' }
-        };
+       const targetMap = {
+                0: { elemento: 'target-sultanes', nombre: 'sultanes' },
+                1: { elemento: 'target-acereros', nombre: 'acereros' },
+                2: { elemento: 'target-algodoneros', nombre: 'algodoneros' },
+                3: { elemento: 'target-toros', nombre: 'toros' },
+                4: { elemento: 'target-charros', nombre: 'charros' }
+            };
+
 
         let targetActual = null;
 
@@ -280,12 +297,40 @@
                 actualizarDebug('❌ Error iniciando la cámara AR.\nVerifica permisos de cámara.');
             });
 
-            // Mapeo de targetIndex → id del pivote
-            const pivoteMap = {
-                0: 'pivote-acereros',
-                1: 'pivote-rieleros',
-                2: 'pivote-toros'
-            };
+
+            btnPlayPausa.addEventListener('click', () => {
+                const pivotes = [
+                    'pivote-sultanes',
+                    'pivote-acereros',
+                    'pivote-algodoneros',
+                    'pivote-toros',
+                    'pivote-charros'
+                ];
+
+                animacionPausada = !animacionPausada;
+
+                pivotes.forEach(id => {
+                    const pivote = document.querySelector('#' + id);
+                    if (pivote) {
+                        if (animacionPausada) {
+                            pivote.removeAttribute('animation');
+                        } else {
+                            pivote.setAttribute('animation', 
+                                'property: rotation; from: 0 0 0; to: 0 360 0; loop: true; dur: 8000; easing: linear'
+                            );
+                        }
+                    }
+                });
+
+                // Cambiar solo el icono (ya no hay texto)
+                if (animacionPausada) {
+                    iconoPlayPausa.src = '../iconos/play.png';
+                    iconoPlayPausa.alt = 'Play';
+                } else {
+                    iconoPlayPausa.src = '../iconos/pausa.png';
+                    iconoPlayPausa.alt = 'Pausa';
+                }
+            });
 
             // En iniciarMindAR(), dentro del forEach:
             Object.entries(targetMap).forEach(([index, target]) => {

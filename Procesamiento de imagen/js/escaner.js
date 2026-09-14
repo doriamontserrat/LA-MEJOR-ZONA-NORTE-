@@ -324,10 +324,10 @@
 
                 // Cambiar solo el icono (ya no hay texto)
                 if (animacionPausada) {
-                    iconoPlayPausa.src = '../iconos/play.png';
+                    iconoPlayPausa.src = '../img/play.png';
                     iconoPlayPausa.alt = 'Play';
                 } else {
-                    iconoPlayPausa.src = '../iconos/pausa.png';
+                    iconoPlayPausa.src = '../img/Pause.png';
                     iconoPlayPausa.alt = 'Pausa';
                 }
             });

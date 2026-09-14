@@ -123,34 +123,41 @@ video,
     z-index: 10 !important;
 }
 
-/* ===== BOTÓN PLAY/PAUSA FLOTANTE ===== */
 .btn-play-flotante {
     position: absolute !important;
-    bottom: 200px !important;   /* Ajusta si es necesario */
+    bottom: 160px !important;
     left: 50% !important;
     transform: translateX(-50%) !important;
-    z-index: 9999 !important;   /* 🔑 CLAVE: debajo del debug, pero encima de todo lo demás */
+    z-index: 9999 !important;
     
-    width: 55px;
-    height: 55px;
-    background: rgba(0, 0, 0, 0.7);
+    /* 🔑 Quitamos el fondo, borde y hacemos que se ajuste a la imagen */
+    width: auto !important;
+    height: auto !important;
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     
-    transition: transform 0.2s, background 0.2s;
+    transition: transform 0.2s;
     pointer-events: auto !important;
 }
 
 .btn-play-flotante:active {
     transform: translateX(-50%) scale(0.9) !important;
-    background: rgba(0, 0, 0, 0.95);
+    /* Sin fondo que cambiar, solo el efecto de escala */
 }
 
 .btn-play-flotante img {
-    width: 26px;
-    height: 26px;
+    /* 🔑 Aquí controlas el tamaño real de la imagen */
+    width: 60px !important;   /* Ajusta este valor si la quieres más grande o pequeña */
+    height: 60px !important;
     object-fit: contain;
-    pointer-events: none; /* 🔑 Para que el clic siempre lo reciba el botón, no la imagen */
+    pointer-events: none;
+    /* Opcional: una sombra sutil para que se vea bien sobre fondos claros u oscuros */
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5));
 }

@@ -1,6 +1,15 @@
 const mysql = require('mysql2/promise');
 require('dotenv').config();
 
+// Log de las variables (debug)
+console.log('DB Config:', {
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  user: process.env.DB_USER,
+  database: process.env.DB_NAME,
+  env: process.env.NODE_ENV
+});
+
 const pool = mysql.createPool({
   host: process.env.DB_HOST || 'localhost',
   port: process.env.DB_PORT || 3306,
@@ -9,10 +18,12 @@ const pool = mysql.createPool({
   database: process.env.DB_NAME || 'beisbol_app',
   waitForConnections: true,
   connectionLimit: 10,
-  queueLimit: 0
+  queueLimit: 0,
+  enableKeepAlive: true,
+  keepAliveInitialDelayMs: 0
 });
 
-// Probar la conexión
+// Probar la conexión (sin bloquear la inicialización del servidor)
 pool.getConnection()
   .then(connection => {
     console.log('✓ Conectado a MySQL exitosamente');
@@ -20,6 +31,8 @@ pool.getConnection()
   })
   .catch(err => {
     console.error('✗ Error conectando a MySQL:', err.message);
+    console.error('Detalles:', err);
+    // NO lanzar error - el servidor debe continuar funcionando
   });
 
 module.exports = pool;

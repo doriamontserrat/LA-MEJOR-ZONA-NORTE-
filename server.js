@@ -65,24 +65,54 @@ app.get('/api/health', async (req, res) => {
       environment: process.env.NODE_ENV || 'development'
     });
   } catch (error) {
-    console.error('Error en health check:', error);
-    res.status(500).json({ 
+    console.error('Error en health check:', error.message);
+    res.status(503).json({ 
       status: 'ERROR', 
       mensaje: 'Error conectando a la base de datos',
       error: error.message,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      debug: {
+        dbHost: process.env.DB_HOST,
+        dbPort: process.env.DB_PORT,
+        dbUser: process.env.DB_USER,
+        dbName: process.env.DB_NAME
+      }
     });
   }
+});
+
+// Manejo de rutas no encontradas (404)
+app.use((req, res) => {
+  console.warn(`404 Not Found: ${req.method} ${req.path}`);
+  res.status(404).json({ 
+    error: 'Ruta no encontrada',
+    path: req.path,
+    method: req.method
+  });
+});
+
+// Manejo global de errores
+app.use((err, req, res, next) => {
+  console.error('Error no capturado:', err);
+  res.status(500).json({ 
+    error: 'Error interno del servidor',
+    message: err.message
+  });
 });
 
 // En el entorno de Vercel es crítico usar process.env.PORT
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, '0.0.0.0', () => {
+const server = app.listen(PORT, '0.0.0.0', () => {
     console.log('--------------------------------------------------');
     console.log(` Servidor corriendo en http://localhost:${PORT}/`);
     console.log(' API disponible en http://localhost:' + PORT + '/api/');
     console.log('--------------------------------------------------');
+});
+
+// Manejo de conexiones
+server.on('error', (err) => {
+  console.error('Error en servidor:', err);
 });
 
 module.exports = app; // Necesario para despliegues Serverless/Vercel

@@ -66,7 +66,7 @@ NODE_ENV=production
 
 4. **Redeploy**: Click en "Redeploy" o hace push a GitHub
 
-## ✔️ Verificar que Funciona
+## ✔️ Verificar que Funciona![alt text](image.png)
 
 ### Local (antes de subir)
 ```bash

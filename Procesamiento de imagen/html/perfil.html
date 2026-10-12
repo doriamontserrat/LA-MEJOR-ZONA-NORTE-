@@ -50,7 +50,7 @@
 
                      <div class="input-group">
                         <label>CONTRASEÑA</label>
-                        <input type="contra" id="input-contra" placeholder="Contraseña segura ejemplo: DmGc142857¿" required>
+                        <input type="password" id="input-contra" minlength="6" placeholder="Contraseña segura ejemplo: DmGc142857¿" required>
                     </div>
                     
                     <div class="input-group">
@@ -58,6 +58,7 @@
                         <input type="date" id="input-cumple" required>
                     </div>
                     
+                    <p id="perfil-error" role="alert" style="color:#d93025;font-size:14px;margin:8px 0;min-height:1em;"></p>
                     <button type="submit" class="btn-guardar">Guardar</button>
                 </form>
 

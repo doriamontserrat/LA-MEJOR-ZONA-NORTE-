@@ -1,20 +1,42 @@
 // Scripts de la página 
 
         // --- SCRIPT DE SINCRONIZACIÓN DE PERFIL ---
-        document.addEventListener('DOMContentLoaded', () => {
-            const nombreGuardado = localStorage.getItem('userName');
-            const avatarGuardado = localStorage.getItem('userAvatar');
-            
-            if (nombreGuardado) {
-                document.getElementById('user-greeting-name').textContent = nombreGuardado;
+        function mostrarUsuario(nombre, avatar) {
+            if (nombre) {
+                document.getElementById('user-greeting-name').textContent = nombre;
+            }
+            if (avatar) {
+                const navAvatar = document.getElementById('nav-avatar-img');
+                if (navAvatar) navAvatar.src = avatar;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const userId = localStorage.getItem('userId');
+            if (!userId) {
+                window.location.href = '/index.html';
+                return;
             }
 
-            if (avatarGuardado) {
-                const navAvatar = document.getElementById('nav-avatar-img');
-                if (navAvatar) navAvatar.src = avatarGuardado;
+            // Se muestra primero lo guardado al iniciar sesión y luego se refresca desde la BD
+            mostrarUsuario(localStorage.getItem('userName'), localStorage.getItem('userAvatar'));
+
+            try {
+                const resp = await fetch('/api/usuarios/id/' + encodeURIComponent(userId));
+                if (resp.status === 404) {
+                    localStorage.clear();
+                    window.location.href = '/index.html';
+                    return;
+                }
+                if (!resp.ok) return;
+                const u = await resp.json();
+                localStorage.setItem('userName', u.nombre);
+                if (u.avatar) localStorage.setItem('userAvatar', u.avatar);
+                mostrarUsuario(u.nombre, u.avatar);
+            } catch (err) {
+                // Sin conexión: se conserva lo mostrado desde localStorage
             }
         });
-
         // --- SCRIPT DE BÚSQUEDA Y FAVORITOS ---
         const buscador = document.getElementById('buscador');
         const tarjetas = document.querySelectorAll('.stadium-card');

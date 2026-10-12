@@ -15,8 +15,8 @@
                 
                 <img src="img/logo-azul.png" alt="Logo La Mejor Zona Norte" class="logo-form">
                 
-                <h1>Crea una cuenta</h1>
-                <p class="subtitle">Ingresa tu correo electrónico para registrarte en esta aplicación</p>
+                <h1>Inicia sesión</h1>
+                <p class="subtitle">Ingresa tu correo y contraseña para entrar a la aplicación</p>
                 
                 <!-- Añadido id="login-form" para controlar el evento -->
                 <form id="login-form">
@@ -26,6 +26,7 @@
                     <!-- Campo de contraseña con id="login-password" -->
                     <input type="password" id="login-password" placeholder="contraseña" required class="input-password">
                     
+                    <p id="login-error" role="alert" style="color:#d93025;font-size:14px;margin:8px 0;min-height:1em;"></p>
                     <button type="submit" class="btn-primary">Continuar</button>
                 </form>
                 
@@ -61,18 +62,42 @@
 
     <script>
         const loginForm = document.getElementById('login-form');
+        const loginError = document.getElementById('login-error');
 
-        loginForm.addEventListener('submit', function(e) {
-            e.preventDefault(); 
-            const email = document.getElementById('login-email').value;
+        loginForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            loginError.textContent = '';
+
+            const email = document.getElementById('login-email').value.trim();
             const password = document.getElementById('login-password').value;
 
-            // Guardamos el correo y contraseña
-            localStorage.setItem('userEmail', email);
-            localStorage.setItem('userPassword', password);
-            
-            // Redirigimos a PRINCIPAL después de registrarse
-            window.location.href = 'html/principal.html';
+            try {
+                const resp = await fetch('/api/usuarios/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const data = await resp.json();
+
+                if (!resp.ok) {
+                    loginError.textContent = data.error || 'No se pudo iniciar sesión';
+                    return;
+                }
+
+                // Guardamos los datos del usuario obtenidos de la base de datos
+                const u = data.usuario;
+                localStorage.setItem('userId', u.id);
+                localStorage.setItem('userName', u.nombre);
+                localStorage.setItem('userEmail', u.email);
+                localStorage.setItem('userPhone', u.telefono || '');
+                localStorage.setItem('userDob', u.fecha_nacimiento || '');
+                if (u.avatar) localStorage.setItem('userAvatar', u.avatar);
+                else localStorage.removeItem('userAvatar');
+
+                window.location.href = 'html/principal.html';
+            } catch (err) {
+                loginError.textContent = 'No se pudo conectar con el servidor';
+            }
         });
     </script>
 </body>

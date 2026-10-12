@@ -18,9 +18,7 @@ const pool = mysql.createPool({
   database: process.env.DB_NAME || 'beisbol_app',
   waitForConnections: true,
   connectionLimit: 10,
-  queueLimit: 0,
-  enableKeepAlive: true,
-  keepAliveInitialDelayMs: 0
+  queueLimit: 0
 });
 
 // Probar la conexión (sin bloquear la inicialización del servidor)

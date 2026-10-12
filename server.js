@@ -15,6 +15,17 @@ const logosRoutes = require('./routes/logos');
 const quizRoutes = require('./routes/quiz');
 const checklistRoutes = require('./routes/checklist');
 
+// Middleware CORS para permitir solicitudes desde cualquier origen
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  next();
+});
+
 // Middleware
 // El avatar viaja como base64, el límite por defecto (100kb) es insuficiente
 app.use(express.json({ limit: '4mb' }));
@@ -40,8 +51,28 @@ app.get('/', (req, res) => {
 });
 
 // Ruta de salud para verificar la conexión a BD
-app.get('/api/health', (req, res) => {
-    res.json({ status: 'OK', mensaje: 'Servidor y BD funcionando correctamente' });
+app.get('/api/health', async (req, res) => {
+  try {
+    const connection = await db.getConnection();
+    const [rows] = await connection.query('SELECT 1');
+    connection.release();
+    
+    res.json({ 
+      status: 'OK', 
+      mensaje: 'Servidor y BD funcionando correctamente',
+      db: 'Conectada',
+      timestamp: new Date().toISOString(),
+      environment: process.env.NODE_ENV || 'development'
+    });
+  } catch (error) {
+    console.error('Error en health check:', error);
+    res.status(500).json({ 
+      status: 'ERROR', 
+      mensaje: 'Error conectando a la base de datos',
+      error: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
 });
 
 // En el entorno de Vercel es crítico usar process.env.PORT

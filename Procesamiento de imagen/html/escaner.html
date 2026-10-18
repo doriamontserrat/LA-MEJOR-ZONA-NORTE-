@@ -37,6 +37,11 @@
                     <a-asset-item id="modelo-algodoneros-asset" src="/Modelos/algodoneros.glb"></a-asset-item>
                     <a-asset-item id="modelo-toros-asset" src="/Modelos/toros.glb"></a-asset-item>
                     <a-asset-item id="modelo-charros-asset" src="/Modelos/charros.glb"></a-asset-item>
+                    <a-asset-item id="modelo-rieleros-asset" src="/Modelos/RIELEROS.glb"></a-asset-item>
+                    <a-asset-item id="modelo-saraperos-asset" src="/Modelos/saraperos.glb"></a-asset-item>
+                    <a-asset-item id="modelo-tecolotes-asset" src="/Modelos/tecolotes.glb"></a-asset-item>
+                    <a-asset-item id="modelo-caliente-asset" src="/Modelos/caliente.glb"></a-asset-item>
+                    <a-asset-item id="modelo-dorados-asset" src="/Modelos/Chihuahua.glb"></a-asset-item>
                 </a-assets>
 
                 <a-camera position="0 0 0" look-controls="enabled: false" cursor="fuse: false" raycaster="far: 10000; objects: .clickable"></a-camera>
@@ -78,6 +83,134 @@
                     <a-entity id="pivote-charros" position="0 0 0" visible="false"
                             animation="property: rotation; from: 0 0 0; to: 0 360 0; loop: true; dur: 8000; easing: linear">
                         <a-gltf-model src="#modelo-charros-asset" position="0 0 0.1" scale="0.25 0.25 0.25"></a-gltf-model>
+                    </a-entity>
+                </a-entity>
+
+                <!-- TARGET 5: RIELEROS -->
+                <a-entity id="target-rieleros" mindar-image-target="targetIndex: 5">
+                    <a-entity id="pivote-rieleros" position="0 0 0" visible="false"
+                            animation="property: rotation; from: 0 0 0; to: 0 360 0; loop: true; dur: 8000; easing: linear">
+                        <a-gltf-model src="#modelo-rieleros-asset" position="0 0 0.1" scale="0.25 0.25 0.25"></a-gltf-model>
+                    </a-entity>
+                </a-entity>
+
+                <!-- TARGET 6: SARAPEROS -->
+                <a-entity id="target-saraperos" mindar-image-target="targetIndex: 6">
+                    <a-entity id="pivote-saraperos" position="0 0 0" visible="false"
+                            animation="property: rotation; from: 0 0 0; to: 0 360 0; loop: true; dur: 8000; easing: linear">
+                        <a-gltf-model src="#modelo-saraperos-asset" position="0 0 0.1" scale="0.25 0.25 0.25"></a-gltf-model>
+                    </a-entity>
+                </a-entity>
+
+                <!-- TARGET 7: TECOLOTES -->
+                <a-entity id="target-tecolotes" mindar-image-target="targetIndex: 7">
+                    <a-entity id="pivote-tecolotes" position="0 0 0" visible="false"
+                            animation="property: rotation; from: 0 0 0; to: 0 360 0; loop: true; dur: 8000; easing: linear">
+                        <a-gltf-model src="#modelo-tecolotes-asset" position="0 0 0.1" scale="0.25 0.25 0.25"></a-gltf-model>
+                    </a-entity>
+                </a-entity>
+
+                <!-- TARGET 8: CALIENTE -->
+                <a-entity id="target-caliente" mindar-image-target="targetIndex: 8">
+                    <a-entity id="pivote-caliente" position="0 0 0" visible="false"
+                            animation="property: rotation; from: 0 0 0; to: 0 360 0; loop: true; dur: 8000; easing: linear">
+                        <a-gltf-model src="#modelo-caliente-asset" position="0 0 0.1" scale="0.25 0.25 0.25"></a-gltf-model>
+                    </a-entity>
+                </a-entity>
+
+                <!-- TARGET 9: SULTANES (Logo 2) -->
+                <a-entity id="target-sultanes2" mindar-image-target="targetIndex: 9">
+                    <a-entity id="pivote-sultanes2" position="0 0 0" visible="false"
+                            animation="property: rotation; from: 0 0 0; to: 0 360 0; loop: true; dur: 8000; easing: linear">
+                        <a-gltf-model src="#modelo-sultanes-asset" position="0 0 0.1" scale="0.25 0.25 0.25"></a-gltf-model>
+                    </a-entity>
+                </a-entity>
+
+                <!-- TARGET 10: SULTANES (Logo 3) -->
+                <a-entity id="target-sultanes3" mindar-image-target="targetIndex: 10">
+                    <a-entity id="pivote-sultanes3" position="0 0 0" visible="false"
+                            animation="property: rotation; from: 0 0 0; to: 0 360 0; loop: true; dur: 8000; easing: linear">
+                        <a-gltf-model src="#modelo-sultanes-asset" position="0 0 0.1" scale="0.25 0.25 0.25"></a-gltf-model>
+                    </a-entity>
+                </a-entity>
+
+                <!-- TARGET 11: ACEREROS (Logo 2) -->
+                <a-entity id="target-acereros2" mindar-image-target="targetIndex: 11">
+                    <a-entity id="pivote-acereros2" position="0 0 0" visible="false"
+                            animation="property: rotation; from: 0 0 0; to: 0 360 0; loop: true; dur: 8000; easing: linear">
+                        <a-gltf-model src="#modelo-acereros-asset" position="0 0 0.1" scale="0.25 0.25 0.25"></a-gltf-model>
+                    </a-entity>
+                </a-entity>
+
+                <!-- TARGET 12: ALGODONEROS (Logo 2) -->
+                <a-entity id="target-algodoneros2" mindar-image-target="targetIndex: 12">
+                    <a-entity id="pivote-algodoneros2" position="0 0 0" visible="false"
+                            animation="property: rotation; from: 0 0 0; to: 0 360 0; loop: true; dur: 8000; easing: linear">
+                        <a-gltf-model src="#modelo-algodoneros-asset" position="0 0 0.1" scale="0.25 0.25 0.25"></a-gltf-model>
+                    </a-entity>
+                </a-entity>
+
+                <!-- TARGET 13: TOROS (Logo 2) -->
+                <a-entity id="target-toros2" mindar-image-target="targetIndex: 13">
+                    <a-entity id="pivote-toros2" position="0 0 0" visible="false"
+                            animation="property: rotation; from: 0 0 0; to: 0 360 0; loop: true; dur: 8000; easing: linear">
+                        <a-gltf-model src="#modelo-toros-asset" position="0 0 0.1" scale="0.25 0.25 0.25"></a-gltf-model>
+                    </a-entity>
+                </a-entity>
+
+                <!-- TARGET 14: CHARROS (Logo 2) -->
+                <a-entity id="target-charros2" mindar-image-target="targetIndex: 14">
+                    <a-entity id="pivote-charros2" position="0 0 0" visible="false"
+                            animation="property: rotation; from: 0 0 0; to: 0 360 0; loop: true; dur: 8000; easing: linear">
+                        <a-gltf-model src="#modelo-charros-asset" position="0 0 0.1" scale="0.25 0.25 0.25"></a-gltf-model>
+                    </a-entity>
+                </a-entity>
+
+                <!-- TARGET 15: DORADOS -->
+                <a-entity id="target-dorados" mindar-image-target="targetIndex: 15">
+                    <a-entity id="pivote-dorados" position="0 0 0" visible="false"
+                            animation="property: rotation; from: 0 0 0; to: 0 360 0; loop: true; dur: 8000; easing: linear">
+                        <a-gltf-model src="#modelo-dorados-asset" position="0 0 0.1" scale="0.25 0.25 0.25"></a-gltf-model>
+                    </a-entity>
+                </a-entity>
+
+                <!-- TARGET 16: DORADOS (Logo 2) -->
+                <a-entity id="target-dorados2" mindar-image-target="targetIndex: 16">
+                    <a-entity id="pivote-dorados2" position="0 0 0" visible="false"
+                            animation="property: rotation; from: 0 0 0; to: 0 360 0; loop: true; dur: 8000; easing: linear">
+                        <a-gltf-model src="#modelo-dorados-asset" position="0 0 0.1" scale="0.25 0.25 0.25"></a-gltf-model>
+                    </a-entity>
+                </a-entity>
+
+                <!-- TARGET 17: TOROS (Logo 3) -->
+                <a-entity id="target-toros3" mindar-image-target="targetIndex: 17">
+                    <a-entity id="pivote-toros3" position="0 0 0" visible="false"
+                            animation="property: rotation; from: 0 0 0; to: 0 360 0; loop: true; dur: 8000; easing: linear">
+                        <a-gltf-model src="#modelo-toros-asset" position="0 0 0.1" scale="0.25 0.25 0.25"></a-gltf-model>
+                    </a-entity>
+                </a-entity>
+
+                <!-- TARGET 18: SARAPEROS (Logo 2) -->
+                <a-entity id="target-saraperos2" mindar-image-target="targetIndex: 18">
+                    <a-entity id="pivote-saraperos2" position="0 0 0" visible="false"
+                            animation="property: rotation; from: 0 0 0; to: 0 360 0; loop: true; dur: 8000; easing: linear">
+                        <a-gltf-model src="#modelo-saraperos-asset" position="0 0 0.1" scale="0.25 0.25 0.25"></a-gltf-model>
+                    </a-entity>
+                </a-entity>
+
+                <!-- TARGET 19: TECOLOTES (Logo 2) -->
+                <a-entity id="target-tecolotes2" mindar-image-target="targetIndex: 19">
+                    <a-entity id="pivote-tecolotes2" position="0 0 0" visible="false"
+                            animation="property: rotation; from: 0 0 0; to: 0 360 0; loop: true; dur: 8000; easing: linear">
+                        <a-gltf-model src="#modelo-tecolotes-asset" position="0 0 0.1" scale="0.25 0.25 0.25"></a-gltf-model>
+                    </a-entity>
+                </a-entity>
+
+                <!-- TARGET 20: CALIENTE (Logo 2) -->
+                <a-entity id="target-caliente2" mindar-image-target="targetIndex: 20">
+                    <a-entity id="pivote-caliente2" position="0 0 0" visible="false"
+                            animation="property: rotation; from: 0 0 0; to: 0 360 0; loop: true; dur: 8000; easing: linear">
+                        <a-gltf-model src="#modelo-caliente-asset" position="0 0 0.1" scale="0.25 0.25 0.25"></a-gltf-model>
                     </a-entity>
                 </a-entity>
 

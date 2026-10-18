@@ -33,56 +33,83 @@
         const btnVerMasEquipo = document.getElementById('btn-ver-mas-equipo');
 
         // Datos de equipos mapeados por targetIndex
-        const equiposData = {
-            0: {
-                nombre: 'SULTANES DE MONTERREY',
-                descripcion: 'Los Sultanes de Monterrey, fundados en 1939, son uno de los equipos más emblemáticos de la Liga Mexicana de Béisbol.',
-                url: 'estadio-monumental.html'
-            },
-            1: {
-                nombre: 'ACEREROS DE CHIHUAHUA',
-                descripcion: 'Los Acereros de Chihuahua, fundados en 1983, representan la tradición y la fuerza del acero del estado de Chihuahua.',
-                url: 'estadio-acereros.html'
-            },
-            2: {
-                nombre: 'ALGODONEROS DE GUADALAJARA',
-                descripcion: 'Los Algodoneros de Guadalajara, fundados en 1975, son un equipo con una rica historia en la Liga Mexicana de Béisbol.',
-                url: 'estadio-algodoneros.html'
-            },
-            3: {
-                nombre: 'TOROS DE TLAXCALA',
-                descripcion: 'Leyenda y tradición de Tlaxcala, los Toros llevan en su nombre la historia del estado y su identidad cultural.',
-                url: 'estadio-toros.html'
-            },
-            4: {
-                nombre: 'CHARROS DE JALISCO',
-                descripcion: 'Los Charros de Jalisco, fundados en 1946, son un equipo con una rica tradición en la Liga Mexicana de Béisbol.',
-                url: 'estadio-charros.html'
-            }
+     const equiposData = {
+            0: { nombre: 'SULTANES DE MONTERREY', descripcion: 'Los Sultanes de Monterrey, emblemáticos de la Liga Mexicana.', url: 'estadio-monumental.html' },
+            1: { nombre: 'ACEREROS DE MONCLOVA', descripcion: 'La Furia Azul, representando la fuerza del acero.', url: 'estadio-acereros.html' },
+            2: { nombre: 'ALGODONEROS UNIÓN LAGUNA', descripcion: 'Equipo de gran tradición en la Comarca Lagunera.', url: 'estadio-algodoneros.html' },
+            3: { nombre: 'TOROS DE TIJUANA', descripcion: 'Los Toros, fuerza y garra de la frontera.', url: 'estadio-toros.html' },
+            4: { nombre: 'CHARROS DE JALISCO', descripcion: 'Identidad y tradición jalisciense en el diamante.', url: 'estadio-charros.html' },
+            5: { nombre: 'RIELEROS DE AGUASCALIENTES', descripcion: 'El convoy ferrocarrilero con gran historia.', url: 'estadio-rieleros.html' },
+            6: { nombre: 'SARAPEROS DE SALTILLO', descripcion: 'El Dragón del Norte, equipo histórico de Coahuila.', url: 'estadio-saraperos.html' },
+            7: { nombre: 'TECOLOTES DE LOS DOS LAREDOS', sunset: 'El equipo que une a dos naciones en el béisbol.', url: 'estadio-tecolotes.html' },
+            8: { nombre: 'CALIENTE DE DURANGO', descripcion: 'Representativo apasionado del estado de Durango.', url: 'estadio-caliente.html' },
+            9: { nombre: 'SULTANES DE MONTERREY (Logo 2)', descripcion: 'Logotipo alternativo (MT) de los Sultanes.', url: 'estadio-monumental.html' },
+            10: { nombre: 'SULTANES DE MONTERREY (Logo 3)', descripcion: 'Logotipo script alternativo de los Sultanes.', url: 'estadio-monumental.html' },
+            11: { nombre: 'ACEREROS DE MONCLOVA (Logo 2)', descripcion: 'Escudo tradicional de los Acereros.', url: 'estadio-acereros.html' },
+            12: { nombre: 'ALGODONEROS UNIÓN LAGUNA (Logo 2)', descripcion: 'Escudo conmemorativo de Unión Laguna.', url: 'estadio-algodoneros.html' },
+            13: { nombre: 'TOROS DE TIJUANA (Logo 2)', descripcion: 'Logo secundario de Toros de Tijuana.', url: 'estadio-toros.html' },
+            14: { nombre: 'CHARROS DE JALISCO (Logo 2)', descripcion: 'Logotipo tipográfico de Charros.', url: 'estadio-charros.html' },
+            15: { nombre: 'DORADOS DE CHIHUAHUA', descripcion: 'Los Dorados del Estado Grande.', url: 'estadio-dorados.html' },
+            16: { nombre: 'DORADOS DE CHIHUAHUA (Logo 2)', descripcion: 'Escudo alternativo con sombrero de Dorados.', url: 'estadio-dorados.html' },
+            17: { nombre: 'TOROS DE TIJUANA (Logo 3)', descripcion: 'Variante icónica de los cuernos de Toros.', url: 'estadio-toros.html' },
+            18: { nombre: 'SARAPEROS DE SALTILLO (Logo 2)', descripcion: 'Logotipo retro "S" de los Saraperos.', url: 'estadio-saraperos.html' },
+            19: { nombre: 'TECOLOTES DE LOS DOS LAREDOS (Logo 2)', descripcion: 'Escudo secundario de los Tecolotes.', url: 'estadio-tecolotes.html' },
+            20: { nombre: 'CALIENTE DE DURANGO (Logo 2)', descripcion: 'Escudo negro y rojo de Caliente de Durango.', url: 'estadio-caliente.html' }
         };
-        
 
         // Mapeo de targets para acceso fácil
-       const targetMap = {
-                0: { elemento: 'target-sultanes', nombre: 'sultanes' },
-                1: { elemento: 'target-acereros', nombre: 'acereros' },
-                2: { elemento: 'target-algodoneros', nombre: 'algodoneros' },
-                3: { elemento: 'target-toros', nombre: 'toros' },
-                4: { elemento: 'target-charros', nombre: 'charros' }
-            };
-
+      const targetMap = {
+            0: { elemento: 'target-sultanes', nombre: 'sultanes' },
+            1: { elemento: 'target-acereros', nombre: 'acereros' },
+            2: { elemento: 'target-algodoneros', nombre: 'algodoneros' },
+            3: { elemento: 'target-toros', nombre: 'toros' },
+            4: { elemento: 'target-charros', nombre: 'charros' },
+            5: { elemento: 'target-rieleros', nombre: 'rieleros' },
+            6: { elemento: 'target-saraperos', nombre: 'saraperos' },
+            7: { elemento: 'target-tecolotes', nombre: 'tecolotes' },
+            8: { elemento: 'target-caliente', nombre: 'caliente' },
+            9: { elemento: 'target-sultanes2', nombre: 'sultanes2' },
+            10: { elemento: 'target-sultanes3', nombre: 'sultanes3' },
+            11: { elemento: 'target-acereros2', nombre: 'acereros2' },
+            12: { elemento: 'target-algodoneros2', nombre: 'algodoneros2' },
+            13: { elemento: 'target-toros2', nombre: 'toros2' },
+            14: { elemento: 'target-charros2', nombre: 'charros2' },
+            15: { elemento: 'target-dorados', nombre: 'dorados' },
+            16: { elemento: 'target-dorados2', nombre: 'dorados2' },
+            17: { elemento: 'target-toros3', nombre: 'toros3' },
+            18: { elemento: 'target-saraperos2', nombre: 'saraperos2' },
+            19: { elemento: 'target-tecolotes2', nombre: 'tecolotes2' },
+            20: { elemento: 'target-caliente2', nombre: 'caliente2' }
+        };
 
         let targetActual = null;
 
         // Mapeo de pivotes para las animaciones
         const pivoteMap = {
-            0: 'pivote-sultanes',
-            1: 'pivote-acereros',
-            2: 'pivote-algodoneros',
-            3: 'pivote-toros',
-            4: 'pivote-charros'
-        };
+                0: 'pivote-sultanes',
+                1: 'pivote-acereros',
+                2: 'pivote-algodoneros',
+                3: 'pivote-toros',
+                4: 'pivote-charros',
+                5: 'pivote-rieleros',
+                6: 'pivote-saraperos',
+                7: 'pivote-tecolotes',
+                8: 'pivote-caliente',
+                9: 'pivote-sultanes2',
+                10: 'pivote-sultanes3',
+                11: 'pivote-acereros2',
+                12: 'pivote-algodoneros2',
+                13: 'pivote-toros2',
+                14: 'pivote-charros2',
+                15: 'pivote-dorados',
+                16: 'pivote-dorados2',
+                17: 'pivote-toros3',
+                18: 'pivote-saraperos2',
+                19: 'pivote-tecolotes2',
+                20: 'pivote-caliente2'
+            };
 
+            
         // Mostrar datos del equipo detectado
         btnCambiarFiltro.addEventListener('click', () => {
             const equipo = targetActual !== null ? equiposData[targetActual] : equiposData[0];
@@ -313,7 +340,23 @@
                     pivoteMap[1],
                     pivoteMap[2],
                     pivoteMap[3],
-                    pivoteMap[4]
+                    pivoteMap[4],
+                    pivoteMap[5],
+                    pivoteMap[6],
+                    pivoteMap[7],
+                    pivoteMap[8],
+                    pivoteMap[9],
+                    pivoteMap[10],
+                    pivoteMap[11],
+                    pivoteMap[12],
+                    pivoteMap[13],
+                    pivoteMap[14],
+                    pivoteMap[15],
+                    pivoteMap[16],
+                    pivoteMap[17],
+                    pivoteMap[18],
+                    pivoteMap[19],
+                    pivoteMap[20]
                 ];
 
                 animacionPausada = !animacionPausada;

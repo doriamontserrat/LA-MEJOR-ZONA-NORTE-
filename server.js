@@ -15,7 +15,7 @@ const logosRoutes = require('./routes/logos');
 const quizRoutes = require('./routes/quiz');
 const checklistRoutes = require('./routes/checklist');
 
-// Middleware CORS para permitir solicitudes desde cualquier origen
+// 1. Configuración de CORS
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
@@ -26,18 +26,11 @@ app.use((req, res, next) => {
   next();
 });
 
-// Middleware
-// El avatar viaja como base64, el límite por defecto (100kb) es insuficiente
+// 2. Middlewares de parsing (JSON y URL Encoded)
 app.use(express.json({ limit: '4mb' }));
 app.use(express.urlencoded({ extended: true, limit: '4mb' }));
 
-// Servir archivos estáticos desde 'Procesamiento de imagen' y sus subcarpetas
-app.use(express.static(path.join(__dirname, 'Procesamiento de imagen')));
-
-// Servir recursos de la raíz también
-app.use(express.static(__dirname));
-
-// Rutas de API
+// 3. RUTAS DE API (Van PRIMERO para evitar conflictos con archivos estáticos)
 app.use('/api/usuarios', usuariosRoutes);
 app.use('/api/favoritos', favoritosRoutes);
 app.use('/api/monedas', monedasRoutes);
@@ -45,12 +38,7 @@ app.use('/api/logos', logosRoutes);
 app.use('/api/quiz', quizRoutes);
 app.use('/api/checklist', checklistRoutes);
 
-// Ruta raíz (abre index.html por defecto)
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'Procesamiento de imagen', 'index.html'));
-});
-
-// Ruta de salud para verificar la conexión a BD
+// Ruta de salud/verificación de BD
 app.get('/api/health', async (req, res) => {
   try {
     const connection = await db.getConnection();
@@ -81,7 +69,16 @@ app.get('/api/health', async (req, res) => {
   }
 });
 
-// Manejo de rutas no encontradas (404)
+// 4. ARCHIVOS ESTÁTICOS (Van DESPUÉS de la API)
+app.use(express.static(path.join(__dirname, 'Procesamiento de imagen')));
+app.use(express.static(__dirname));
+
+// Ruta raíz (servir index.html)
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'Procesamiento de imagen', 'index.html'));
+});
+
+// 5. Manejo de rutas no encontradas (404)
 app.use((req, res) => {
   console.warn(`404 Not Found: ${req.method} ${req.path}`);
   res.status(404).json({ 
@@ -91,7 +88,7 @@ app.use((req, res) => {
   });
 });
 
-// Manejo global de errores
+// 6. Manejo global de errores (500)
 app.use((err, req, res, next) => {
   console.error('Error no capturado:', err);
   res.status(500).json({ 
@@ -100,19 +97,19 @@ app.use((err, req, res, next) => {
   });
 });
 
-// En el entorno de Vercel es crítico usar process.env.PORT
-const PORT = process.env.PORT || 3000;
-
-const server = app.listen(PORT, '0.0.0.0', () => {
+// 7. Iniciar el servidor localmente (SÓLO si el archivo se ejecuta directamente con Node)
+if (require.main === module) {
+  const PORT = process.env.PORT || 3000;
+  const server = app.listen(PORT, '0.0.0.0', () => {
     console.log('--------------------------------------------------');
     console.log(` Servidor corriendo en http://localhost:${PORT}/`);
-    console.log(' API disponible en http://localhost:' + PORT + '/api/');
+    console.log(` API disponible en http://localhost:${PORT}/api/`);
     console.log('--------------------------------------------------');
-});
+  });
 
-// Manejo de conexiones
-server.on('error', (err) => {
-  console.error('Error en servidor:', err);
-});
+  server.on('error', (err) => {
+    console.error('Error en servidor:', err);
+  });
+}
 
-module.exports = app; // Necesario para despliegues Serverless/Vercel
+module.exports = app; // Requerido para Vercel

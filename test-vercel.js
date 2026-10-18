@@ -9,7 +9,7 @@ const https = require('https');
 const http = require('http');
 
 // Reemplaza esto con tu URL de Vercel
-const VERCEL_URL = process.argv[2] || 'http://localhost:3000';
+const VERCEL_URL = process.argv[2] || 'https://la-mejor-zona-norte.vercel.app/';
 
 console.log('\n🔍 Verificando conexión...\n');
 console.log(`URL a verificar: ${VERCEL_URL}`);

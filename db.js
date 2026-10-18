@@ -1,39 +1,40 @@
-const mysql = require('mysql2/promise');
 require('dotenv').config();
+const mysql = require('mysql2/promise');
 
-// Log de las variables (debug) para confirmar que no digan "undefined"
-console.log('DB Config:', {
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
-  user: process.env.DB_USER,
-  database: process.env.DB_NAME,
-  env: process.env.NODE_ENV
-});
+const env = process.env;
 
+// Acepta DB_* o las variables MYSQL_ADDON_* que entrega Clever Cloud
+const host = env.DB_HOST || env.MYSQL_ADDON_HOST || 'localhost';
+const port = parseInt(env.DB_PORT || env.MYSQL_ADDON_PORT || '3306', 10);
+const user = env.DB_USER || env.MYSQL_ADDON_USER || 'root';
+const password = env.DB_PASSWORD || env.MYSQL_ADDON_PASSWORD || '';
+const database = env.DB_NAME || env.MYSQL_ADDON_DB || 'beisbol_app';
+const esLocal = ['localhost', '127.0.0.1'].includes(host);
+
+// Clever Cloud limita a 5 conexiones simultáneas por usuario y en Vercel cada
+// instancia serverless crea su propio pool, por eso el pool es pequeño.
 const pool = mysql.createPool({
-  host: process.env.DB_HOST || 'localhost',
-  port: process.env.DB_PORT ? parseInt(process.env.DB_PORT) : 3306,
-  user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || '',
-  database: process.env.DB_NAME || 'beisbol_app',
+  host,
+  port,
+  user,
+  password,
+  database,
   waitForConnections: true,
-  connectionLimit: 10,
+  connectionLimit: parseInt(env.DB_CONNECTION_LIMIT || '2', 10),
+  maxIdle: 1,
+  idleTimeout: 10000,
   queueLimit: 0,
-  // ESTO ES CLAVE: Muchos servidores remotos exigen SSL
-  ssl: process.env.NODE_ENV === 'production' || process.env.DB_HOST !== 'localhost' ? {
-    rejectUnauthorized: false
-  } : undefined
+  connectTimeout: 10000,
+  enableKeepAlive: true,
+  ssl: esLocal ? undefined : { rejectUnauthorized: false }
 });
 
-// Probar la conexión (sin bloquear la inicialización del servidor)
-pool.getConnection()
-  .then(connection => {
-    console.log('✓ Conectado a MySQL exitosamente');
-    connection.release();
-  })
-  .catch(err => {
-    console.error('✗ Error conectando a MySQL:', err.message);
-    console.error('Detalles:', err);
-  });
+// Las rutas solo usan query() y release(). Se ejecutan con pool.query() para que una
+// consulta fallida nunca deje una conexión tomada.
+pool.getDedicatedConnection = pool.getConnection.bind(pool);
+pool.getConnection = async () => ({
+  query: (...args) => pool.query(...args),
+  release() {}
+});
 
 module.exports = pool;

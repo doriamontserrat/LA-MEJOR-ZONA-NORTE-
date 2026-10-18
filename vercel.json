@@ -1,13 +1,16 @@
 {
+  "framework": null,
+  "buildCommand": null,
+  "outputDirectory": "Procesamiento de imagen",
   "functions": {
-    "server.js": {
-      "includeFiles": "Procesamiento de imagen/**"
+    "api/index.js": {
+      "excludeFiles": "Procesamiento de imagen/**"
     }
   },
   "rewrites": [
     {
-      "source": "/(.*)",
-      "destination": "/server.js"
+      "source": "/api/(.*)",
+      "destination": "/api"
     }
   ]
 }

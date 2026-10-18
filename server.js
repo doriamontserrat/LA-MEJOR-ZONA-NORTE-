@@ -41,10 +41,8 @@ app.use('/api/checklist', checklistRoutes);
 // Ruta de salud/verificación de BD
 app.get('/api/health', async (req, res) => {
   try {
-    const connection = await db.getConnection();
-    const [rows] = await connection.query('SELECT 1');
-    connection.release();
-    
+    await db.query('SELECT 1');
+
     res.json({ 
       status: 'OK', 
       mensaje: 'Servidor y BD funcionando correctamente',
@@ -53,25 +51,19 @@ app.get('/api/health', async (req, res) => {
       environment: process.env.NODE_ENV || 'development'
     });
   } catch (error) {
-    console.error('Error en health check:', error.message);
+    console.error('Error en health check:', error);
+    // Solo el código del error: no se expone host, usuario ni mensajes internos
     res.status(503).json({ 
       status: 'ERROR', 
       mensaje: 'Error conectando a la base de datos',
-      error: error.message,
-      timestamp: new Date().toISOString(),
-      debug: {
-        dbHost: process.env.DB_HOST,
-        dbPort: process.env.DB_PORT,
-        dbUser: process.env.DB_USER,
-        dbName: process.env.DB_NAME
-      }
+      codigo: error.code || 'DESCONOCIDO',
+      timestamp: new Date().toISOString()
     });
   }
 });
 
-// 4. ARCHIVOS ESTÁTICOS (Van DESPUÉS de la API)
+// 4. ARCHIVOS ESTÁTICOS (solo para desarrollo local; en Vercel los sirve su CDN)
 app.use(express.static(path.join(__dirname, 'Procesamiento de imagen')));
-app.use(express.static(__dirname));
 
 // Ruta raíz (servir index.html)
 app.get('/', (req, res) => {

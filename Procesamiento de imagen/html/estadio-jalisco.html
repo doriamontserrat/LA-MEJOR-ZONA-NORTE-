@@ -84,5 +84,24 @@
             localStorage.setItem('misFavoritos', JSON.stringify(favs));
         });
     </script>
+    <section class="video-equipo" data-video="/videos%20beisbol/Charros%20de%20Jalisco.mp4" data-nombre="Charros de Jalisco">
+        <h3 class="ficha-subtitle">Video del equipo</h3>
+        <div class="video-container">
+            <video class="video-equipo-player" controls playsinline preload="metadata" src="/videos%20beisbol/Charros%20de%20Jalisco.mp4"></video>
+        </div>
+        <a class="btn-primary ficha-btn" href="/videos%20beisbol/Charros%20de%20Jalisco.mp4" download="Charros de Jalisco.mp4">⬇ Descargar video</a>
+        <select class="select-filtro" aria-label="Tipo de filtro">
+            <option value="bn">Blanco y negro</option>
+            <option value="sepia">Sepia</option>
+            <option value="contraste">Alto contraste</option>
+            <option value="invertido">Invertido</option>
+        </select>
+        <button type="button" class="btn-secondary ficha-btn btn-filtro">🎨 Agregar filtro</button>
+        <button type="button" class="btn-secondary ficha-btn btn-quitar-filtro" style="display: none;">Quitar filtro</button>
+        <div class="video-progreso"><div></div></div>
+        <p class="video-estado"></p>
+        <button type="button" class="btn-primary ficha-btn btn-descargar-filtro" style="display: none;">⬇ Descargar video con filtro</button>
+    </section>
+    <script src="/js/video-equipo.js"></script>
 </body>
 </html>

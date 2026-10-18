@@ -1,13 +1,13 @@
 {
   "functions": {
-    "api/index.js": {
+    "server.js": {
       "includeFiles": "Procesamiento de imagen/**"
     }
   },
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "/api"
+      "destination": "/server.js"
     }
   ]
 }

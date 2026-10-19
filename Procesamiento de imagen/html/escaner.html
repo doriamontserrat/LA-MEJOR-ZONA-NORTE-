@@ -42,11 +42,11 @@
         </div>
 
             <a-scene id="ar-scene"
-               mindar-image="imageTargetSrc: /Escaneo/targets.mind; autoStart: true; uiScanning: no; uiLoading: no; uiError: no;"
-               color-space="sRGB"
-               renderer="colorManagement: true, physicallyCorrectLights, alpha: true"
-               vr-mode-ui="enabled: false"
-               device-orientation-permission-ui="enabled: false">
+            mindar-image="imageTargetSrc: /Escaneo/targets.mind; autoStart: true; uiScanning: no; uiLoading: no; uiError: no; filterMinCF: 0.0001; filterBeta: 0.001;"
+            color-space="sRGB"
+            renderer="colorManagement: true, physicallyCorrectLights, alpha: true"
+            vr-mode-ui="enabled: false"
+            device-orientation-permission-ui="enabled: false">
                 <a-assets timeout="20000">
                     <a-asset-item id="modelo-sultanes-asset" src="/Modelos/sultanes.glb"></a-asset-item>
                     <a-asset-item id="modelo-acereros-asset" src="/Modelos/acereross.glb"></a-asset-item>

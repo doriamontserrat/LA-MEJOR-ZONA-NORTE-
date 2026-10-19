@@ -2,6 +2,16 @@
     color-scheme: only light;
 }
 
+html {
+    background-color: #ffffff !important;
+    color-scheme: only light !important;
+}
+
+body {
+    background-color: #fafafa !important;
+    color: #333 !important;
+}
+
 * {
     margin: 0;
     padding: 0;

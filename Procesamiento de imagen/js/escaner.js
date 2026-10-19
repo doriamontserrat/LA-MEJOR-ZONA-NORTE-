@@ -34,27 +34,27 @@
 
         // Datos de equipos mapeados por targetIndex
      const equiposData = {
-            0: { nombre: 'SULTANES DE MONTERREY', descripcion: 'Los Sultanes de Monterrey, emblemáticos de la Liga Mexicana.', url: 'estadio-sultanes.html' },
-            1: { nombre: 'ACEREROS DE MONCLOVA', descripcion: 'La Furia Azul, representando la fuerza del acero.', url: 'estadio-monclova.html' },
-            2: { nombre: 'ALGODONEROS UNIÓN LAGUNA', descripcion: 'Equipo de gran tradición en la Comarca Lagunera.', url: 'estadio-laguna.html' },
-            3: { nombre: 'TOROS DE TIJUANA', descripcion: 'Los Toros, fuerza y garra de la frontera.', url: 'estadio-chevron.html' },
-            4: { nombre: 'CHARROS DE JALISCO', descripcion: 'Identidad y tradición jalisciense en el diamante.', url: 'estadio-jalisco.html' },
-            5: { nombre: 'RIELEROS DE AGUASCALIENTES', descripcion: 'El convoy ferrocarrilero con gran historia.', url: 'estadio-aguascalientes.html' },
-            6: { nombre: 'SARAPEROS DE SALTILLO', descripcion: 'El Dragón del Norte, equipo histórico de Coahuila.', url: 'estadio-saltillo.html' },
-            7: { nombre: 'TECOLOTES DE LOS DOS LAREDOS', descripcion: 'El equipo que une a dos naciones en el béisbol.', url: 'estadio-tecolotes.html' },
-            8: { nombre: 'CALIENTE DE DURANGO', descripcion: 'Representativo apasionado del estado de Durango.', url: 'estadio-durango.html' },
-            9: { nombre: 'SULTANES DE MONTERREY (Logo 2)', descripcion: 'Logotipo alternativo (MT) de los Sultanes.', url: 'estadio-sultanes.html' },
-            10: { nombre: 'SULTANES DE MONTERREY (Logo 3)', descripcion: 'Logotipo script alternativo de los Sultanes.', url: 'estadio-sultanes.html' },
-            11: { nombre: 'ACEREROS DE MONCLOVA (Logo 2)', descripcion: 'Escudo tradicional de los Acereros.', url: 'estadio-monclova.html' },
-            12: { nombre: 'ALGODONEROS UNIÓN LAGUNA (Logo 2)', descripcion: 'Escudo conmemorativo de Unión Laguna.', url: 'estadio-laguna.html' },
-            13: { nombre: 'TOROS DE TIJUANA (Logo 2)', descripcion: 'Logo secundario de Toros de Tijuana.', url: 'estadio-chevron.html' },
-            14: { nombre: 'CHARROS DE JALISCO (Logo 2)', descripcion: 'Logotipo tipográfico de Charros.', url: 'estadio-jalisco.html' },
-            15: { nombre: 'DORADOS DE CHIHUAHUA', descripcion: 'Los Dorados del Estado Grande.', url: 'estadio-monumental.html' },
-            16: { nombre: 'DORADOS DE CHIHUAHUA (Logo 2)', descripcion: 'Escudo alternativo con sombrero de Dorados.', url: 'estadio-monumental.html' },
-            17: { nombre: 'RIELEROS DE AGUASCALIENTES (Logo 2)', descripcion: 'Logotipo "R" alternativo de los Rieleros.', url: 'estadio-aguascalientes.html' },
-            18: { nombre: 'SARAPEROS DE SALTILLO (Logo 2)', descripcion: 'Logotipo retro "S" de los Saraperos.', url: 'estadio-saltillo.html' },
-            19: { nombre: 'TECOLOTES DE LOS DOS LAREDOS (Logo 2)', descripcion: 'Escudo secundario de los Tecolotes.', url: 'estadio-tecolotes.html' },
-            20: { nombre: 'CALIENTE DE DURANGO (Logo 2)', descripcion: 'Escudo negro y rojo de Caliente de Durango.', url: 'estadio-durango.html' }
+            0:  { nombre: 'SULTANES DE MONTERREY', descripcion: 'El equipo con más títulos en la LMB: 10 campeonatos.', url: 'estadio-sultanes.html' },
+            1:  { nombre: 'ACEREROS DE MONCLOVA', descripcion: 'Su estadio, el Monclova, es uno de los más calientes de la liga.', url: 'estadio-monclova.html' },
+            2:  { nombre: 'ALGODONEROS UNIÓN LAGUNA', descripcion: 'Nació en 1940 y es el equipo más antiguo de la Comarca Lagunera.', url: 'estadio-laguna.html' },
+            3:  { nombre: 'TOROS DE TIJUANA', descripcion: 'Ganó el título de la LMP en 2017 y 2018 consecutivos.', url: 'estadio-chevron.html' },
+            4:  { nombre: 'CHARROS DE JALISCO', descripcion: 'Su nombre honra a los jinetes tradicionales de Jalisco.', url: 'estadio-jalisco.html' },
+            5:  { nombre: 'RIELEROS DE AGUASCALIENTES', descripcion: 'Su logo rinde homenaje al ferrocarril de Aguascalientes.', url: 'estadio-aguascalientes.html' },
+            6:  { nombre: 'SARAPEROS DE SALTILLO', descripcion: 'Tres títulos de la LMB en su historia (1980, 2009, 2010).', url: 'estadio-saltillo.html' },
+            7:  { nombre: 'TECOLOTES DE LOS DOS LAREDOS', descripcion: 'Único equipo que juega en dos países: México y EE.UU.', url: 'estadio-tecolotes.html' },
+            8:  { nombre: 'CALIENTE DE DURANGO', descripcion: 'Se unió a la LMB en 2023 como equipo de expansión.', url: 'estadio-durango.html' },
+            9:  { nombre: 'SULTANES DE MONTERREY (Logo 2)', descripcion: 'El "MT" es su monograma clásico desde los años 40.', url: 'estadio-sultanes.html' },
+            10: { nombre: 'SULTANES DE MONTERREY (Logo 3)', descripcion: 'El script es el logotipo usado en sus uniformes retro.', url: 'estadio-sultanes.html' },
+            11: { nombre: 'ACEREROS DE MONCLOVA (Logo 2)', descripcion: 'El escudo muestra un acero fundido, símbolo de Monclova.', url: 'estadio-monclova.html' },
+            12: { nombre: 'ALGODONEROS UNIÓN LAGUNA (Logo 2)', descripcion: 'El algodón es el cultivo histórico de La Laguna.', url: 'estadio-laguna.html' },
+            13: { nombre: 'TOROS DE TIJUANA (Logo 2)', descripcion: 'El toro bravo representa la fiesta taurina de Tijuana.', url: 'estadio-chevron.html' },
+            14: { nombre: 'CHARROS DE JALISCO (Logo 2)', descripcion: 'La tipografía evoca la charrería, deporte nacional.', url: 'estadio-jalisco.html' },
+            15: { nombre: 'DORADOS DE CHIHUAHUA', descripcion: 'Juega en el Estadio Monumental, con capacidad para 14,500.', url: 'estadio-monumental.html' },
+            16: { nombre: 'DORADOS DE CHIHUAHUA (Logo 2)', descripcion: 'El sombrero de Dorados es icono del norte de México.', url: 'estadio-monumental.html' },
+            17: { nombre: 'RIELEROS DE AGUASCALIENTES (Logo 2)', descripcion: 'La "R" recuerda los talleres ferroviarios de la ciudad.', url: 'estadio-aguascalientes.html' },
+            18: { nombre: 'SARAPEROS DE SALTILLO (Logo 2)', descripcion: 'El sarape saltillense inspiró su nombre y colores.', url: 'estadio-saltillo.html' },
+            19: { nombre: 'TECOLOTES DE LOS DOS LAREDOS (Logo 2)', descripcion: 'El tecolote es ave emblemática de la frontera.', url: 'estadio-tecolotes.html' },
+            20: { nombre: 'CALIENTE DE DURANGO (Logo 2)', descripcion: 'Su nombre viene del patrocinador, un casino de Durango.', url: 'estadio-durango.html' }
         };
 
         // Mapeo de targets para acceso fácil
@@ -191,7 +191,7 @@
 
         // 2. Logo centrado abajo (dentro de la imagen, sobre el marco inferior)
         try {
-            const logo = await cargarImagen('img/logo-azul.png');
+            const logo = await cargarImagen('./img/logo-azul.png');
 
             // Tamaño del logo: 18% del ancho de la foto (ajústalo a tu gusto)
             const logoW = Math.round(canvas.width * 0.18);

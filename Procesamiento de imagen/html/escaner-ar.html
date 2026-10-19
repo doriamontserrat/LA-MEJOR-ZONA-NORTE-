@@ -193,6 +193,17 @@
     </style>
 </head>
 <body>
+    <!-- Tutorial / Guía de RV -->
+    <div class="tutorial-vr-overlay" id="tutorial-vr">
+        <div class="tutorial-vr-header">
+            <div class="tutorial-vr-title">Guía de AR</div>
+            <button class="tutorial-vr-close" onclick="document.getElementById('tutorial-vr').style.display='none'">×</button>
+        </div>
+        <div class="tutorial-vr-text">
+            Apunta la cámara hacia el logo del equipo para activar la experiencia de realidad aumentada.
+        </div>
+    </div>
+
     <div id="container">
         <video id="camera-video" playsinline autoplay muted></video>
         <canvas id="ar-canvas"></canvas>

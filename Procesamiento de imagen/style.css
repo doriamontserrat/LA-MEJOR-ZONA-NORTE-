@@ -2712,6 +2712,88 @@ body.bg-dark {
 }
 
 
+        /* ESTILOS NUEVOS PARA EL RECUADRO DE TUTORIAL / GUÍA DE RV */
+        .tutorial-vr-overlay {
+            position: absolute;
+            top: 80px;
+            left: 20px;
+            right: 20px;
+            background: rgba(20, 20, 30, 0.85);
+            border: 2px solid #a855f7;
+            border-radius: 16px;
+            padding: 15px;
+            color: #ffffff;
+            z-index: 100;
+            box-shadow: 0 8px 32px rgba(168, 85, 247, 0.4);
+            backdrop-filter: blur(8px);
+            font-family: sans-serif;
+            animation: fadeInDown 0.5s ease-out;
+        }
+
+        .tutorial-vr-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .tutorial-vr-title {
+            font-size: 15px;
+            font-weight: bold;
+            color: #d8b4fe;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tutorial-vr-close {
+            background: transparent;
+            border: none;
+            color: #ffffff;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 0 4px;
+        }
+
+        .tutorial-vr-text {
+            font-size: 13px;
+            line-height: 1.4;
+            margin: 0;
+            color: #e2e8f0;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Adaptación para celular real */
+        @media (max-width: 500px) {
+            body {
+                padding: 0;
+                background-color: #000000 !important;
+            }
+            .page-watermark-bg {
+                display: none; /* En celular la cámara toma toda la pantalla */
+            }
+            .app-device-frame {
+                max-width: 100%;
+                height: 100vh;
+                height: 100dvh;
+                border-radius: 0;
+                box-shadow: none;
+            }
+        }
+
+
+
 
 
 

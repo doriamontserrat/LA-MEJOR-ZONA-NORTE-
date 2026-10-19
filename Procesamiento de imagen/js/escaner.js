@@ -43,7 +43,6 @@
             6: { nombre: 'SARAPEROS DE SALTILLO', descripcion: 'El Dragón del Norte, equipo histórico de Coahuila.', url: 'estadio-saltillo.html' },
             7: { nombre: 'TECOLOTES DE LOS DOS LAREDOS', descripcion: 'El equipo que une a dos naciones en el béisbol.', url: 'estadio-tecolotes.html' },
             8: { nombre: 'CALIENTE DE DURANGO', descripcion: 'Representativo apasionado del estado de Durango.', url: 'estadio-durango.html' },
-            9: { nombre: 'SULTANES DE MONTERREY (Logo 2)', descripcion: 'Logotipo alternativo (MT) de los Sultanes.', url: 'estadio-sultanes.html' },
             10: { nombre: 'SULTANES DE MONTERREY (Logo 3)', descripcion: 'Logotipo script alternativo de los Sultanes.', url: 'estadio-sultanes.html' },
             11: { nombre: 'ACEREROS DE MONCLOVA (Logo 2)', descripcion: 'Escudo tradicional de los Acereros.', url: 'estadio-monclova.html' },
             12: { nombre: 'ALGODONEROS UNIÓN LAGUNA (Logo 2)', descripcion: 'Escudo conmemorativo de Unión Laguna.', url: 'estadio-laguna.html' },

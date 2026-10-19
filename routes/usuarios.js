@@ -3,7 +3,6 @@ const crypto = require('crypto');
 const router = express.Router();
 const pool = require('../db');
 
-// Nunca se devuelve password_hash al cliente
 const COLUMNAS_PUBLICAS =
   "id, nombre, email, telefono, DATE_FORMAT(fecha_nacimiento, '%Y-%m-%d') AS fecha_nacimiento, avatar, fecha_registro";
 
@@ -25,6 +24,9 @@ function verificarPassword(password, almacenado) {
 
 const normalizarEmail = (email) => String(email || '').trim().toLowerCase();
 
+// Sanitizador de valores opcionales para tipos DATE o VARCHAR en MySQL
+const limpiarOpcional = (val) => (val && String(val).trim() !== '' ? String(val).trim() : null);
+
 // Registrar usuario
 router.post('/crear', async (req, res) => {
   try {
@@ -40,17 +42,24 @@ router.post('/crear', async (req, res) => {
 
     const [result] = await pool.query(
       'INSERT INTO usuarios (nombre, email, password_hash, telefono, fecha_nacimiento, avatar) VALUES (?, ?, ?, ?, ?, ?)',
-      [nombre, email, hashPassword(String(password)), telefono || null, fecha_nacimiento || null, avatar || null]
+      [
+        String(nombre).trim(),
+        email,
+        hashPassword(String(password)),
+        limpiarOpcional(telefono),
+        limpiarOpcional(fecha_nacimiento),
+        limpiarOpcional(avatar)
+      ]
     );
 
-    // Crear entrada de monedas para el usuario
+    // Insertar registro inicial en la tabla monedas_usuario (cumple con la relación 1 a 1)
     try {
       await pool.query(
         'INSERT INTO monedas_usuario (usuario_id, cantidad) VALUES (?, ?)',
         [result.insertId, 0]
       );
     } catch (monedaErr) {
-      console.warn('No se pudo inicializar la tabla monedas_usuario:', monedaErr.message);
+      console.warn('Advertencia al crear registro de monedas:', monedaErr.message);
     }
 
     const [rows] = await pool.query(
@@ -65,11 +74,16 @@ router.post('/crear', async (req, res) => {
       mensaje: 'Usuario creado exitosamente'
     });
   } catch (error) {
+    console.error('Error en POST /api/usuarios/crear:', error);
+
     if (error.code === 'ER_DUP_ENTRY') {
-      return res.status(409).json({ error: 'Ya existe una cuenta con ese correo' });
+      return res.status(409).json({ error: 'Ya existe una cuenta registrada con este correo' });
     }
-    console.error('Error creando usuario:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
+
+    res.status(500).json({
+      error: 'Error interno del servidor al crear usuario',
+      detalle: error.message
+    });
   }
 });
 
@@ -95,27 +109,8 @@ router.post('/login', async (req, res) => {
     const { password_hash, ...usuario } = rows[0];
     res.json({ success: true, usuario });
   } catch (error) {
-    console.error('Error en login:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
-  }
-});
-
-// Obtener usuario por email
-router.get('/email/:email', async (req, res) => {
-  try {
-    const [rows] = await pool.query(
-      `SELECT ${COLUMNAS_PUBLICAS} FROM usuarios WHERE email = ?`,
-      [normalizarEmail(req.params.email)]
-    );
-
-    if (rows.length === 0) {
-      return res.status(404).json({ error: 'Usuario no encontrado' });
-    }
-
-    res.json(rows[0]);
-  } catch (error) {
-    console.error('Error obteniendo usuario:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
+    console.error('Error en POST /api/usuarios/login:', error);
+    res.status(500).json({ error: 'Error interno del servidor', detalle: error.message });
   }
 });
 
@@ -138,12 +133,12 @@ router.get('/id/:id', async (req, res) => {
 
     res.json(rows[0]);
   } catch (error) {
-    console.error('Error obteniendo usuario:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
+    console.error('Error en GET /api/usuarios/id:', error);
+    res.status(500).json({ error: 'Error interno del servidor', detalle: error.message });
   }
 });
 
-// Actualizar perfil de usuario
+// Actualizar perfil
 router.put('/actualizar/:id', async (req, res) => {
   try {
     const userId = parseInt(req.params.id, 10);
@@ -158,13 +153,17 @@ router.put('/actualizar/:id', async (req, res) => {
     }
 
     const campos = ['nombre = ?', 'telefono = ?', 'fecha_nacimiento = ?'];
-    const valores = [nombre, telefono || null, fecha_nacimiento || null];
+    const valores = [
+      String(nombre).trim(),
+      limpiarOpcional(telefono),
+      limpiarOpcional(fecha_nacimiento)
+    ];
 
     if (avatar) {
       campos.push('avatar = ?');
       valores.push(avatar);
     }
-    if (password) {
+    if (password && String(password).trim() !== '') {
       if (String(password).length < MIN_PASSWORD) {
         return res.status(400).json({ error: `La contraseña debe tener al menos ${MIN_PASSWORD} caracteres` });
       }
@@ -186,10 +185,10 @@ router.put('/actualizar/:id', async (req, res) => {
       [userId]
     );
 
-    res.json({ success: true, usuario: rows[0], mensaje: 'Perfil actualizado' });
+    res.json({ success: true, usuario: rows[0], mensaje: 'Perfil actualizado exitosamente' });
   } catch (error) {
-    console.error('Error actualizando usuario:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
+    console.error('Error en PUT /api/usuarios/actualizar:', error);
+    res.status(500).json({ error: 'Error interno del servidor', detalle: error.message });
   }
 });
 

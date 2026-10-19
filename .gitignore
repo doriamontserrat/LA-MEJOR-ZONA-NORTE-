@@ -6,7 +6,7 @@ node_modules/
 .env.local
 # .gitignore
 node_modules/
-.env
+#.env
 
 # Archivos de registros y logs
 npm-debug.log*

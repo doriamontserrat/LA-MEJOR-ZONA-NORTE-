@@ -298,4 +298,81 @@ video,
             }
         }
 
+/* ===== ZOOM SLIDER STYLES ===== */
+.zoom-slider {
+    position: absolute !important;
+    bottom: 90px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 200px !important;
+    height: 40px !important;
+    background: rgba(20, 20, 30, 0.9) !important;
+    border: 2px solid #3b82f6 !important;
+    border-radius: 20px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 10px !important;
+    padding: 0 12px !important;
+    z-index: 50 !important;
+    backdrop-filter: blur(8px) !important;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3) !important;
+}
+
+.zoom-slider span {
+    color: #3b82f6 !important;
+    font-weight: bold !important;
+    font-size: 18px !important;
+    user-select: none !important;
+}
+
+.zoom-slider input[type="range"] {
+    width: 120px !important;
+    height: 6px !important;
+    border-radius: 5px !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+    outline: none !important;
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    cursor: pointer !important;
+}
+
+.zoom-slider input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    width: 18px !important;
+    height: 18px !important;
+    border-radius: 50% !important;
+    background: #3b82f6 !important;
+    cursor: pointer !important;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.6) !important;
+    transition: transform 0.2s ease !important;
+}
+
+.zoom-slider input[type="range"]::-webkit-slider-thumb:active {
+    transform: scale(1.2) !important;
+}
+
+.zoom-slider input[type="range"]::-moz-range-thumb {
+    width: 18px !important;
+    height: 18px !important;
+    border-radius: 50% !important;
+    background: #3b82f6 !important;
+    cursor: pointer !important;
+    border: none !important;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.6) !important;
+    transition: transform 0.2s ease !important;
+}
+
+.zoom-slider input[type="range"]::-moz-range-thumb:active {
+    transform: scale(1.2) !important;
+}
+
+.zoom-slider input[type="range"]::-moz-range-track {
+    background: transparent !important;
+    border: none !important;
+}
+
+/* ===== END ZOOM SLIDER STYLES ===== */
+
 /* ==

@@ -550,6 +550,18 @@
             window.location.href = '/html/estadio-monumental.html';
         });
 
+        // FUNCIONALIDAD DE ZOOM
+        const zoomSlider = document.querySelector('.zoom-slider input[type="range"]');
+        const arScene = document.getElementById('ar-scene');
+        
+        if (zoomSlider && arScene) {
+            zoomSlider.addEventListener('input', (e) => {
+                const zoomValue = e.target.value / 100;
+                const zoomScale = 0.5 + (zoomValue * 1.5); // Rango de 0.5x a 2x
+                arScene.style.transform = `scale(${zoomScale})`;
+                arScene.style.transformOrigin = 'center center';
+            });
+        }
 
 
    

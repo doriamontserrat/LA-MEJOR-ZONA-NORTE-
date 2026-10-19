@@ -51,6 +51,7 @@
         <a href="/html/menu-perfil.html" class="nav-item"><img src="/img/avatar.jpg" alt="Mi Perfil" class="nav-avatar" id="nav-avatar-quiz"></a>
     </nav>
 
+    <script src="/js/corona.js"></script>
     <!-- Lógica de Redirección Directa -->
     <script>
         // Cargar foto de perfil desde localStorage
@@ -67,9 +68,14 @@
         const coinCounter = document.getElementById('quiz-coin-counter');
         const btnComenzar = document.getElementById('btn-comenzar');
         
-        // 1. Cargar las monedas guardadas en la memoria
-        let misMonedas = parseInt(localStorage.getItem('misMonedas')) || 0;
-        coinCounter.textContent = misMonedas;
+        // 1. Cargar las monedas guardadas en la base de datos
+        const userId = localStorage.getItem('userId');
+        if (userId) {
+            fetch(`/api/juego/estado/${encodeURIComponent(userId)}`, { cache: 'no-store' })
+                .then(resp => (resp.ok ? resp.json() : null))
+                .then(estado => { if (estado) coinCounter.textContent = estado.monedas; })
+                .catch(() => { /* sin conexión: se deja el contador en 0 */ });
+        }
 
         // 2. Lógica directa para Comenzar
         btnComenzar.addEventListener('click', function() {

@@ -26,62 +26,6 @@ router.get('/usuario/:usuario_id', async (req, res) => {
   }
 });
 
-// Actualizar monedas
-router.post('/actualizar', async (req, res) => {
-  try {
-    const { usuario_id, cantidad } = req.body;
-    
-    if (!usuario_id || cantidad === undefined) {
-      return res.status(400).json({ error: 'usuario_id y cantidad son requeridos' });
-    }
-
-    const connection = await pool.getConnection();
-    
-    const [result] = await connection.query(
-      'UPDATE monedas_usuario SET cantidad = ? WHERE usuario_id = ?',
-      [cantidad, usuario_id]
-    );
-
-    connection.release();
-
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ error: 'Usuario no encontrado' });
-    }
-
-    res.json({ success: true, cantidad });
-  } catch (error) {
-    console.error('Error actualizando monedas:', error);
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// Sumar monedas
-router.post('/sumar', async (req, res) => {
-  try {
-    const { usuario_id, cantidad } = req.body;
-    
-    if (!usuario_id || !cantidad) {
-      return res.status(400).json({ error: 'usuario_id y cantidad son requeridos' });
-    }
-
-    const connection = await pool.getConnection();
-    
-    const [result] = await connection.query(
-      'UPDATE monedas_usuario SET cantidad = cantidad + ? WHERE usuario_id = ?',
-      [cantidad, usuario_id]
-    );
-
-    connection.release();
-
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ error: 'Usuario no encontrado' });
-    }
-
-    res.json({ success: true, mensaje: 'Monedas sumadas' });
-  } catch (error) {
-    console.error('Error sumando monedas:', error);
-    res.status(500).json({ error: error.message });
-  }
-});
+// Las monedas solo cambian desde el servidor (checklist, quiz y compra de logos)
 
 module.exports = router;

@@ -1,165 +1,19 @@
 // ============================================
-// BANCO DE PREGUNTAS MUEJEJE PARA QUE NO SEA IGUAL
+// QUIZ: las preguntas vienen de la base de datos y el servidor valida cada
+// respuesta y suma las monedas (5 por acierto en las primeras 5 respuestas
+// del día, 1 por acierto después).
 // ============================================
-const BANCO_PREGUNTAS = [
-    {
-        pregunta: "¿Cómo se llama el estadio actual de los Sultanes de Monterrey?",
-        opciones: ["Estadio Monterrey", "Wal-Mart Park", "Estadio Revolución", "Estadio Chevron"],
-        respuestaCorrecta: 1 
-    },
-    {
-        pregunta: "¿En qué año fue fundado el equipo Dorados de Chihuahua?",
-        opciones: ["1949", "1974", "1936", "1940"],
-        respuestaCorrecta: 2 
-    },
-    {
-        pregunta: "¿Qué equipo de la Zona Norte fue fundado más recientemente (en 2024)?",
-        opciones: ["Caliente de Durango", "Toros de Tijuana", "Rieleros de Aguascalientes", "Acereros de Monclova"],
-        respuestaCorrecta: 0 
-    },
-    {
-        pregunta: "¿En qué ciudad juegan los Charros de Jalisco?",
-        opciones: ["Guadalajara", "Zapopan", "Tlaquepaque", "Tonalá"],
-        respuestaCorrecta: 1 
-    },
-    {
-        pregunta: "¿Qué equipo juega sus partidos de local en el estadio Kickapoo Lucky Eagle?",
-        opciones: ["Saraperos de Saltillo", "Algodoneros de Unión Laguna", "Tecolotes de los Dos Laredos", "Acereros de Monclova"],
-        respuestaCorrecta: 3 
-    },
-    
-    // aQUI PUEDO AÑADIR MAS
-    {
-        pregunta: "Fundados en 1940, son parte de la vieja guardia de la Liga Mexicana, manteniendo viva la tradición beisbolera en Torreón.",
-        opciones: ["Saraperos de Saltillo", "Algodoneros de Unión Laguna", "Acereros de Monclova", "Caliente de Durango"],
-        respuestaCorrecta: 1
-    },
-    {
-        pregunta: "¿Cuál es el equipo con más campeonatos en la Liga Mexicana de Beisbol?",
-        opciones: ["Diablos Rojos del México", "Sultanes de Monterrey", "Leones de Yucatán", "Tigres de Quintana Roo"],
-        respuestaCorrecta: 0
-    },
-    {
-        pregunta: "¿En qué año se fundaron los Sultanes de Monterrey?",
-        opciones: ["1939", "1945", "1950", "1935"],
-        respuestaCorrecta: 0
-    },
-    {
-        pregunta: "¿Qué equipo de la LMB tiene su sede en la ciudad de Saltillo?",
-        opciones: ["Saraperos", "Acereros", "Algodoneros", "Caliente"],
-        respuestaCorrecta: 0
-    },
-    {
-        pregunta: "¿Cuál es el nombre del estadio de los Acereros de Monclova?",
-        opciones: ["Estadio Monclova", "Estadio de Beisbol Monclova", "Estadio Acereros", "Estadio de la Frontera"],
-        respuestaCorrecta: 2
-    },
-    {
-        pregunta: "¿Los Toros de Tijuana juegan en qué estadio?",
-        opciones: ["Estadio Chevron", "Estadio Gasmart", "Estadio Caliente", "Estadio Tijuana"],
-        respuestaCorrecta: 2
-    },
-    {
-        pregunta: "¿Cuál de estos equipos NO pertenece a la Zona Norte de la LMB?",
-        opciones: ["Sultanes", "Saraperos", "Leones de Yucatán", "Acereros"],
-        respuestaCorrecta: 2
-    },
-    {
-        pregunta: "¿Qué ciudad alberga a los Rieleros de Aguascalientes?",
-        opciones: ["Aguascalientes", "Zacatecas", "San Luis Potosí", "Guanajuato"],
-        respuestaCorrecta: 0
-    },
-    {
-        pregunta: "¿Los Tecolotes de los Dos Laredos juegan en qué frontera?",
-        opciones: ["Tijuana-San Diego", "Juárez-El Paso", "Nuevo Laredo-Laredo", "Matamoros-Brownsville"],
-        respuestaCorrecta: 2
-    },
-    {
-        pregunta: "¿Cuál es el equipo más antiguo de la LMB?",
-        opciones: ["Diablos Rojos (1933)", "Sultanes (1939)", "Tecolotes (1940)", "Saraperos (1940)"],
-        respuestaCorrecta: 0
-    },
-    {
-        pregunta: "¿En qué año se fundaron los Toros de Tijuana?",
-        opciones: ["2000", "2004", "2010", "1998"],
-        respuestaCorrecta: 1
-    },
-    {
-        pregunta: "¿Qué equipo tiene como mascota a un 'Sarape'?",
-        opciones: ["Saraperos", "Acereros", "Algodoneros", "Caliente"],
-        respuestaCorrecta: 0
-    },
-    {
-        pregunta: "¿Cuántos equipos conforman la Zona Norte en la LMB?",
-        opciones: ["6", "8", "10", "12"],
-        respuestaCorrecta: 1
-    },
-    {
-        pregunta: "¿Los Algodoneros de Unión Laguna representan a qué ciudad?",
-        opciones: ["Torreón", "Gómez Palacio", "Comarca Lagunera", "Lerdo"],
-        respuestaCorrecta: 2
-    },
-    {
-        pregunta: "¿Qué equipo utiliza el color verde como principal en su uniforme?",
-        opciones: ["Sultanes", "Saraperos", "Acereros", "Caliente de Durango"],
-        respuestaCorrecta: 3
-    },
-    {
-        pregunta: "¿Cuál es el equipo con mayor asistencia de público en la Zona Norte?",
-        opciones: ["Sultanes", "Saraperos", "Acereros", "Toros"],
-        respuestaCorrecta: 0
-    },
-    {
-        pregunta: "¿En qué año se unieron los Caliente de Durango a la LMB?",
-        opciones: ["2020", "2022", "2024", "2018"],
-        respuestaCorrecta: 2
-    },
-    {
-        pregunta: "¿Qué estadio es conocido como 'El Coloso de la Frontera'?",
-        opciones: ["Estadio Monterrey", "Estadio de Beisbol de Tijuana", "Estadio Monclova", "Estadio Saltillo"],
-        respuestaCorrecta: 1
-    },
-    {
-        pregunta: "¿Los Sultanes de Monterrey han ganado cuántos campeonatos?",
-        opciones: ["8", "10", "12", "14"],
-        respuestaCorrecta: 1
-    }
-];
+const USUARIO_ID = localStorage.getItem('userId');
 
-// ============================================
-// FUNCIÓN PARA MEZCLAR ARRAY (Fisher-Yates) esta mezcla als preguntas de manera aleatoria usando random una funcion medio  copmpleja de ehcho es del dilema si realmente existe la aleatoridad en la programcion xd 
-// ============================================
-function mezclarArray(array) {
-    const nuevoArray = [...array];
-    for (let i = nuevoArray.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [nuevoArray[i], nuevoArray[j]] = [nuevoArray[j], nuevoArray[i]];
-    }
-    return nuevoArray;
-}
-
-// ============================================
-// aqui ya se papu seleccionan para el quiz
-// ============================================
-function seleccionarPreguntasAleatorias(cantidad = 5) {
-    const mezcladas = mezclarArray(BANCO_PREGUNTAS);
-    return mezcladas.slice(0, cantidad);
-}
-
-// ============================================
-// se resetaan los vaLORES pára poder dar incio al quiz
-// ============================================
-let preguntas = []; // Este array se llenará al iniciar
+let preguntas = [];
 let indiceActual = 0;
 let monedasGanadas = 0;
 let aciertos = 0;
 let tiempoRestante = 20;
 let temporizador;
-let puedeResponder = true;
+let puedeResponder = false;
 let historialRespuestas = [];
-let puntosActualesPorPregunta = 5; 
-let esRepeticion = false; // Para saber si es la primera vez o repetición
-
+let esRepeticion = false;
 
 const quizHeader = document.getElementById('quiz-header');
 const quizCard = document.getElementById('quiz-card');
@@ -181,38 +35,67 @@ const resultCoinsText = document.getElementById('result-coins-text');
 const resultPercentage = document.getElementById('result-percentage');
 const reviewContainer = document.getElementById('review-container');
 
+function escaparHtml(texto) {
+    const div = document.createElement('div');
+    div.textContent = texto;
+    return div.innerHTML;
+}
+
+// ============================================
+// API
+// ============================================
+async function cargarPreguntas() {
+    const res = await fetch(`/api/quiz/preguntas?usuario_id=${encodeURIComponent(USUARIO_ID)}`, { cache: 'no-store' });
+    if (!res.ok) throw new Error('No se pudieron cargar las preguntas');
+    return res.json();
+}
+
+// respuesta: índice 0-3, o null cuando se acabó el tiempo
+async function enviarRespuesta(respuesta) {
+    const res = await fetch('/api/quiz/guardar-respuesta', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            usuario_id: USUARIO_ID,
+            pregunta_id: preguntas[indiceActual].id,
+            respuesta_seleccionada: respuesta === null ? null : respuesta + 1
+        })
+    });
+    const data = await res.json();
+    if (!res.ok || !data.success) throw new Error(data.error || 'No se pudo guardar la respuesta');
+    return data;
+}
+
 // ============================================
 // INICIALIZAR JUEGO 
 // ============================================
-function iniciarJuego() {
-    // Verificar si ya respondió el quiz completo hoy
-    const quizCompletadoHoy = localStorage.getItem('quizCompletadoHoy') === new Date().toLocaleDateString();
-    
-    // Si ya completó hoy, es una repetición (menos puntos)
-    if (quizCompletadoHoy) {
-        esRepeticion = true;
-        puntosActualesPorPregunta = 1; // Solo 1 puntos por pregunta si repite
-    } else {
-        esRepeticion = false;
-        puntosActualesPorPregunta = 5; // 5 puntos si es la primera vez
+async function iniciarJuego() {
+    if (!USUARIO_ID || USUARIO_ID === 'undefined' || USUARIO_ID === 'null') {
+        window.location.href = '/index.html';
+        return;
     }
-    
-    // Seleccionamos 5 preguntas aleatorias del banco
-    preguntas = seleccionarPreguntasAleatorias(5);
-    
-    // Reiniciamos variables
+
+    try {
+        const data = await cargarPreguntas();
+        preguntas = data.preguntas;
+        esRepeticion = data.repeticion;
+        if (preguntas.length === 0) throw new Error('Sin preguntas');
+    } catch (err) {
+        console.error(err);
+        alert('No pudimos cargar el quiz. Revisa tu conexión e inténtalo de nuevo.');
+        window.location.href = '/html/quiz.html';
+        return;
+    }
+
     indiceActual = 0;
     monedasGanadas = 0;
     aciertos = 0;
     historialRespuestas = [];
     scoreCounter.textContent = '0';
-    
-    // Mostramos la primera pregunta
+
     cargarPregunta();
 }
 
-
-//codigo normnal para cargar preguntas etc
 function cargarPregunta() {
     puedeResponder = true;
     tiempoRestante = 20;
@@ -252,40 +135,56 @@ function iniciarReloj() {
     }, 1000);
 }
 
-function tiempoAgotado() {
-    if(!puedeResponder) return;
+async function tiempoAgotado() {
+    if (!puedeResponder) return;
     puedeResponder = false;
-    
-    const correcta = preguntas[indiceActual].respuestaCorrecta;
-    optionBtns[correcta].classList.add('correct');
-    
+
+    let correcta = null;
+    try {
+        const resultado = await enviarRespuesta(null);
+        correcta = resultado.respuesta_correcta - 1;
+        optionBtns[correcta].classList.add('correct');
+    } catch (err) {
+        console.error(err);
+    }
+
     guardarHistorial(false, correcta);
     setTimeout(siguientePregunta, 2000);
 }
 
-function seleccionarOpcion(indiceSeleccionado) {
+async function seleccionarOpcion(indiceSeleccionado) {
     if (!puedeResponder) return;
     puedeResponder = false;
     clearInterval(temporizador);
 
-    const correcta = preguntas[indiceActual].respuestaCorrecta;
-    const botonSeleccionado = optionBtns[indiceSeleccionado];
-    let esCorrecta = false;
+    let resultado;
+    try {
+        resultado = await enviarRespuesta(indiceSeleccionado);
+    } catch (err) {
+        // No se guardó: se devuelve el control al jugador y sigue corriendo el tiempo
+        console.error(err);
+        alert('No se pudo guardar tu respuesta. Inténtalo de nuevo.');
+        puedeResponder = true;
+        iniciarReloj();
+        return;
+    }
 
-    if (indiceSeleccionado === correcta) {
+    const correcta = resultado.respuesta_correcta - 1;
+    const botonSeleccionado = optionBtns[indiceSeleccionado];
+
+    if (resultado.es_correcta) {
         botonSeleccionado.classList.add('correct');
         botonSeleccionado.querySelector('.option-letter').textContent = '✓';
-        monedasGanadas += puntosActualesPorPregunta; // Usa puntos dinámicos
+        monedasGanadas += resultado.monedas_ganadas;
         aciertos++;
         scoreCounter.textContent = monedasGanadas;
-        esCorrecta = true;
     } else {
         botonSeleccionado.classList.add('incorrect');
         botonSeleccionado.querySelector('.option-letter').textContent = 'X';
         optionBtns[correcta].classList.add('correct');
     }
 
-    guardarHistorial(esCorrecta, correcta);
+    guardarHistorial(resultado.es_correcta, correcta);
     setTimeout(siguientePregunta, 2000);
 }
 
@@ -293,7 +192,7 @@ function guardarHistorial(esCorrecta, indiceCorrecto) {
     historialRespuestas.push({
         pregunta: preguntas[indiceActual].pregunta,
         esCorrecta: esCorrecta,
-        textoCorrecto: preguntas[indiceActual].opciones[indiceCorrecto]
+        textoCorrecto: indiceCorrecto === null ? 'No disponible' : preguntas[indiceActual].opciones[indiceCorrecto]
     });
 }
 
@@ -315,22 +214,13 @@ function mostrarResultados() {
     resultPercentage.textContent = `${porcentaje}%`;
     resultScoreText.textContent = `Acertaste ${aciertos} de ${preguntas.length}`;
     
-    // Agregar indicador si es repetición o primera vez
+    // Las monedas ya se guardaron en la base de datos al responder cada pregunta
     let indicador = esRepeticion ? '(Repetición)' : '(Primera vez hoy)';
     resultCoinsText.textContent = `¡Ganaste +${monedasGanadas} monedas! 💰 ${indicador}`;
 
     if (porcentaje === 100) resultTitle.textContent = "¡Perfección Absoluta!";
     else if (porcentaje >= 60) resultTitle.textContent = "¡Gran Trabajo!";
     else resultTitle.textContent = "¡Sigue Practicando!";
-
-    // Guardar monedas
-    let monedasTotales = parseInt(localStorage.getItem('misMonedas')) || 0;
-    localStorage.setItem('misMonedas', monedasTotales + monedasGanadas);
-    
-    // Si es la primera vez (no es repetición), marcar quiz como completado hoy
-    if (!esRepeticion) {
-        localStorage.setItem('quizCompletadoHoy', new Date().toLocaleDateString());
-    }
 
     let htmlRepaso = '';
     historialRespuestas.forEach(item => {
@@ -341,8 +231,8 @@ function mostrarResultados() {
             <div class="review-item">
                 <div class="review-icon ${iconoClass}">${iconoSigno}</div>
                 <div class="review-content">
-                    <p class="review-q">${item.pregunta}</p>
-                    <p class="review-a">Respuesta: ${item.textoCorrecto}</p>
+                    <p class="review-q">${escaparHtml(item.pregunta)}</p>
+                    <p class="review-a">Respuesta: ${escaparHtml(item.textoCorrecto)}</p>
                 </div>
                 <span class="review-badge-small">GENERAL</span>
             </div>

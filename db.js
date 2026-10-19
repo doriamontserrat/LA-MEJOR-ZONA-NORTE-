@@ -29,6 +29,14 @@ const pool = mysql.createPool({
   ssl: esLocal ? undefined : { rejectUnauthorized: false }
 });
 
+// "Hoy" (checklist diario y quiz) se calcula con la hora de México, no la del servidor (UTC en Vercel).
+const zonaHoraria = /^[+-]\d{2}:\d{2}$/.test(env.DB_TIMEZONE || '') ? env.DB_TIMEZONE : '-06:00';
+pool.pool.on('connection', (conexion) => {
+  conexion.query('SET time_zone = ?', [zonaHoraria], (err) => {
+    if (err) console.warn('No se pudo fijar la zona horaria de la sesión:', err.message);
+  });
+});
+
 // Las rutas solo usan query() y release(). Se ejecutan con pool.query() para que una
 // consulta fallida nunca deje una conexión tomada.
 pool.getDedicatedConnection = pool.getConnection.bind(pool);

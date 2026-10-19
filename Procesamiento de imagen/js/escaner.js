@@ -43,6 +43,7 @@
             6: { nombre: 'SARAPEROS DE SALTILLO', descripcion: 'El Dragón del Norte, equipo histórico de Coahuila.', url: 'estadio-saltillo.html' },
             7: { nombre: 'TECOLOTES DE LOS DOS LAREDOS', descripcion: 'El equipo que une a dos naciones en el béisbol.', url: 'estadio-tecolotes.html' },
             8: { nombre: 'CALIENTE DE DURANGO', descripcion: 'Representativo apasionado del estado de Durango.', url: 'estadio-durango.html' },
+            9: { nombre: 'SULTANES DE MONTERREY (Logo 2)', descripcion: 'Logotipo alternativo (MT) de los Sultanes.', url: 'estadio-sultanes.html' },
             10: { nombre: 'SULTANES DE MONTERREY (Logo 3)', descripcion: 'Logotipo script alternativo de los Sultanes.', url: 'estadio-sultanes.html' },
             11: { nombre: 'ACEREROS DE MONCLOVA (Logo 2)', descripcion: 'Escudo tradicional de los Acereros.', url: 'estadio-monclova.html' },
             12: { nombre: 'ALGODONEROS UNIÓN LAGUNA (Logo 2)', descripcion: 'Escudo conmemorativo de Unión Laguna.', url: 'estadio-laguna.html' },
@@ -50,7 +51,7 @@
             14: { nombre: 'CHARROS DE JALISCO (Logo 2)', descripcion: 'Logotipo tipográfico de Charros.', url: 'estadio-jalisco.html' },
             15: { nombre: 'DORADOS DE CHIHUAHUA', descripcion: 'Los Dorados del Estado Grande.', url: 'estadio-monumental.html' },
             16: { nombre: 'DORADOS DE CHIHUAHUA (Logo 2)', descripcion: 'Escudo alternativo con sombrero de Dorados.', url: 'estadio-monumental.html' },
-            17: { nombre: 'TOROS DE TIJUANA (Logo 3)', descripcion: 'Variante icónica de los cuernos de Toros.', url: 'estadio-chevron.html' },
+            17: { nombre: 'RIELEROS DE AGUASCALIENTES (Logo 2)', descripcion: 'Logotipo "R" alternativo de los Rieleros.', url: 'estadio-aguascalientes.html' },
             18: { nombre: 'SARAPEROS DE SALTILLO (Logo 2)', descripcion: 'Logotipo retro "S" de los Saraperos.', url: 'estadio-saltillo.html' },
             19: { nombre: 'TECOLOTES DE LOS DOS LAREDOS (Logo 2)', descripcion: 'Escudo secundario de los Tecolotes.', url: 'estadio-tecolotes.html' },
             20: { nombre: 'CALIENTE DE DURANGO (Logo 2)', descripcion: 'Escudo negro y rojo de Caliente de Durango.', url: 'estadio-durango.html' }
@@ -75,7 +76,7 @@
             14: { elemento: 'target-charros2', nombre: 'charros2' },
             15: { elemento: 'target-dorados', nombre: 'dorados' },
             16: { elemento: 'target-dorados2', nombre: 'dorados2' },
-            17: { elemento: 'target-toros3', nombre: 'toros3' },
+            17: { elemento: 'target-rieleros2', nombre: 'rieleros2' },
             18: { elemento: 'target-saraperos2', nombre: 'saraperos2' },
             19: { elemento: 'target-tecolotes2', nombre: 'tecolotes2' },
             20: { elemento: 'target-caliente2', nombre: 'caliente2' }
@@ -102,7 +103,7 @@
                 14: 'pivote-charros2',
                 15: 'pivote-dorados',
                 16: 'pivote-dorados2',
-                17: 'pivote-toros3',
+                17: 'pivote-rieleros2',
                 18: 'pivote-saraperos2',
                 19: 'pivote-tecolotes2',
                 20: 'pivote-caliente2'
@@ -188,46 +189,95 @@
             scannerTarget.style.boxShadow = '0 0 20px #4cd964';
         }
 
-        // Función para obtener el logo del día
-        function obtenerLogoDia() {
-            let checklistDias = JSON.parse(localStorage.getItem('checklistDias')) || [];
-            // El índice es el número de días completados (comenzando en 0)
-            // Así que el logo será logo1, logo2, logo3, etc.
-            const diaActual = checklistDias.length; // 0 = logo1, 1 = logo2, etc.
-            return 'logo' + (diaActual + 1);
+        // ===== JUEGO: el logo del día se desbloquea al escanear su target =====
+        // El día N del juego corresponde al target N - 1 (ver targetMap). Escanear otros logos
+        // solo muestra su modelo 3D; la base de datos decide si el escaneo cuenta como check list.
+        const USUARIO_ID = (() => {
+            const id = localStorage.getItem('userId');
+            return id && id !== 'undefined' && id !== 'null' ? id : null;
+        })();
+        let estadoJuego = null;
+        let registrandoEscaneo = false;
+
+        // Logo que se gana cada día (misma imagen que en juego.html)
+        const IMAGEN_LOGO_DIA = [
+            'sultanes4', 'acereros', 'algodoneros', 'toros3', 'charros', 'rieleros', 'saraperos',
+            'tecolotes', 'caliente', 'sultanes2', 'sultanes3', 'acereros2', 'algodoneros2', 'toros2',
+            'charros2', 'dorados2', 'dorados3', 'rieleros2', 'saraperos2', 'tecolotes2', 'caliente2'
+        ];
+
+        async function cargarEstadoJuego() {
+            if (!USUARIO_ID) return;
+            try {
+                const resp = await fetch(`/api/juego/estado/${encodeURIComponent(USUARIO_ID)}`, { cache: 'no-store' });
+                if (resp.ok) estadoJuego = await resp.json();
+            } catch (err) {
+                console.warn('No se pudo cargar el estado del juego:', err);
+            }
         }
 
-        btnEscanear.addEventListener('click', function() {
-            // Si detector está activo, completar el checklist
-            if (detectorActivo) {
-                let misMonedas = parseInt(localStorage.getItem('misMonedas')) || 0;
-                let logosDesbloqueados = JSON.parse(localStorage.getItem('logosDesbloqueados')) || [];
-                let checklistDias = JSON.parse(localStorage.getItem('checklistDias')) || [];
-                
-                // 1. Sumar monedas
-                misMonedas += 10;
-                localStorage.setItem('misMonedas', misMonedas);
-                
-                // 2. Desbloquear el logo del día actual
-                const logoDia = obtenerLogoDia();
-                if (!logosDesbloqueados.includes(logoDia)) {
-                    logosDesbloqueados.push(logoDia);
-                    localStorage.setItem('logosDesbloqueados', JSON.stringify(logosDesbloqueados));
-                }
-                
-                // 3. Registrar el día en la lista de checklists
-                const fechaHoy = new Date().toLocaleDateString();
-                if (!checklistDias.includes(fechaHoy)) {
-                    checklistDias.push(fechaHoy);
-                    localStorage.setItem('checklistDias', JSON.stringify(checklistDias));
-                }
-                
-                // 4. Registrar el checklist de hoy
-                localStorage.setItem('checklistHoy', fechaHoy);
-                
-                sessionStorage.removeItem('detectorActivo');
+        // Índice del target que cuenta hoy, o null si hoy ya no hay nada que ganar
+        function targetDelDia() {
+            if (!estadoJuego || estadoJuego.checklist_hecho_hoy || estadoJuego.juego_completado) return null;
+            return estadoJuego.dia_actual - 1;
+        }
+
+        function mostrarRecompensa(data) {
+            if (window.confetti) {
+                confetti({ particleCount: 120, spread: 80, origin: { y: 0.7 } });
             }
-            
+
+            if (data.juego_completado) {
+                window.Corona?.marcarCompletado(true);
+                window.Corona?.felicitar();
+                return;
+            }
+
+            Swal.fire({
+                title: `¡Día ${data.dia} completado!`,
+                html: `Desbloqueaste el logo de hoy y ganaste <b>+${data.monedas_ganadas} monedas</b> 💰`,
+                imageUrl: `/img/logo-${IMAGEN_LOGO_DIA[data.dia - 1]}.png`,
+                imageHeight: 110,
+                showCancelButton: true,
+                confirmButtonText: 'Ver mi álbum',
+                cancelButtonText: 'Seguir escaneando',
+                confirmButtonColor: 'rgba(0, 51, 160, 0.938)'
+            }).then((resultado) => {
+                if (resultado.isConfirmed) window.location.href = '/html/juego.html';
+            });
+        }
+
+        async function registrarEscaneo(indice) {
+            if (!USUARIO_ID || registrandoEscaneo) return;
+            if (!estadoJuego) await cargarEstadoJuego();
+            if (indice !== targetDelDia()) return;
+
+            registrandoEscaneo = true;
+            try {
+                const resp = await fetch('/api/checklist/escaneo', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ usuario_id: USUARIO_ID, target_index: indice })
+                });
+                const data = await resp.json();
+                if (!resp.ok) throw new Error(data.error || 'No se pudo guardar el escaneo');
+
+                estadoJuego = data;
+                if (data.desbloqueado) {
+                    sessionStorage.removeItem('detectorActivo');
+                    mostrarRecompensa(data);
+                }
+            } catch (err) {
+                console.error('Error registrando escaneo:', err);
+                actualizarDebug('No se pudo guardar tu logo.\nVuelve a apuntar al logo para reintentar.');
+            } finally {
+                registrandoEscaneo = false;
+            }
+        }
+
+        cargarEstadoJuego();
+
+        btnEscanear.addEventListener('click', function() {
             vistaCamara.style.backgroundColor = 'white';
             setTimeout(() => {
                 vistaCamara.style.display = 'none';
@@ -394,7 +444,11 @@
                 targetElement.addEventListener('targetFound', () => {
                     targetActual = parseInt(index);
                     const equipo = equiposData[targetActual];
-                    actualizarDebug(`✓✓✓ ${equipo.nombre} DETECTADO ✓✓✓`);
+                    const noEsDeHoy = estadoJuego && targetDelDia() !== null && targetDelDia() !== targetActual;
+                    actualizarDebug(`✓✓✓ ${equipo.nombre} DETECTADO ✓✓✓` +
+                        (noEsDeHoy ? '\nNo es el logo de hoy: no cuenta para tu check list' : ''));
+
+                    registrarEscaneo(targetActual);
 
                     // 🔑 Mostrar SOLO este pivote
                     if (pivote) pivote.setAttribute('visible', true);

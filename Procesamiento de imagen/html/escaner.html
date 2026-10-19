@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/style.css">
      <link rel="stylesheet" href="/escaner.css">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
     
@@ -182,11 +183,11 @@
                     </a-entity>
                 </a-entity>
 
-                <!-- TARGET 17: TOROS (Logo 3) -->
-                <a-entity id="target-toros3" mindar-image-target="targetIndex: 17">
-                    <a-entity id="pivote-toros3" position="0 0 0" visible="false"
+                <!-- TARGET 17: RIELEROS (Logo 2) -->
+                <a-entity id="target-rieleros2" mindar-image-target="targetIndex: 17">
+                    <a-entity id="pivote-rieleros2" position="0 0 0" visible="false"
                             animation="property: rotation; from: 0 0 0; to: 0 360 0; loop: true; dur: 8000; easing: linear">
-                        <a-gltf-model src="#modelo-toros-asset" position="0 0 0.1" scale="0.25 0.25 0.25"></a-gltf-model>
+                        <a-gltf-model src="#modelo-rieleros-asset" position="0 0 0.1" scale="0.25 0.25 0.25"></a-gltf-model>
                     </a-entity>
                 </a-entity>
 
@@ -325,6 +326,7 @@
 
     </div>
 
+    <script src="/js/corona.js"></script>
     <script src="/js/escaner.js"></script>
 </body>
 </html>

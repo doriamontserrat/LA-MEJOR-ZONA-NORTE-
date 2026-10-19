@@ -1,13 +1,17 @@
 // ============================================================
 // CONFIG
 // ============================================================
-const USUARIO_ID = localStorage.getItem('usuario_id');
+// La sesión se guarda al iniciar sesión / registrarse con la clave "userId"
+const USUARIO_ID = localStorage.getItem('userId');
 
-// Estado global (se llena desde el backend)
-let misMonedas = 0;
-let logosDesbloqueados = [];
-let checklistDias = [];
-let checklistHechoHoy = false;
+// Estado del jugador: siempre viene de la base de datos
+let estado = {
+    monedas: 0,
+    logos_desbloqueados: [],
+    dias_completados: 0,
+    checklist_hecho_hoy: false,
+    juego_completado: false
+};
 
 // Elementos DOM (se resuelven dentro de DOMContentLoaded)
 let coinCounter, btnCheckList, albumItems, rachaCounter;
@@ -17,21 +21,19 @@ let modalDetector, btnIrEscaner, btnCerrarDetector;
 // INIT
 // ============================================================
 document.addEventListener('DOMContentLoaded', async () => {
-    if (!USUARIO_ID) {
-        window.location.href = '/login.html';
+    if (!USUARIO_ID || USUARIO_ID === 'undefined' || USUARIO_ID === 'null') {
+        window.location.href = '/index.html';
         return;
     }
 
-    // Cachear elementos
-    coinCounter      = document.getElementById('coin-counter');
-    btnCheckList     = document.getElementById('btn-hacer-checklist');
-    albumItems       = document.querySelectorAll('.album-item');
-    rachaCounter     = document.getElementById('racha-counter');
-    modalDetector    = document.getElementById('modal-detector');
-    btnIrEscaner     = document.getElementById('btn-ir-escaner');
+    coinCounter       = document.getElementById('coin-counter');
+    btnCheckList      = document.getElementById('btn-hacer-checklist');
+    albumItems        = document.querySelectorAll('.album-item');
+    rachaCounter      = document.getElementById('racha-counter');
+    modalDetector     = document.getElementById('modal-detector');
+    btnIrEscaner      = document.getElementById('btn-ir-escaner');
     btnCerrarDetector = document.getElementById('btn-cerrar-detector');
 
-    // Avatar
     const avatarGuardado = localStorage.getItem('userAvatar');
     if (avatarGuardado) {
         const headerAvatar = document.getElementById('header-avatar-game');
@@ -40,91 +42,74 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (navAvatar) navAvatar.src = avatarGuardado;
     }
 
-    // Cargar TODO el estado desde el backend
-    await cargarEstadoUsuario();
-
-    // Pintar UI
-    renderMonedas();
-    actualizarAlbum();
-    actualizarDiasDesbloqueados();
-    actualizarBotonChecklist();
-
-    // Listeners
     registrarListeners();
+
+    const cargado = await cargarEstadoUsuario();
+    if (!cargado) return;
+
+    renderTodo();
+
+    if (estado.juego_completado) {
+        window.Corona?.marcarCompletado(true);
+        if (window.Corona?.felicitacionPendiente()) window.Corona.felicitar();
+    }
 });
 
 // ============================================================
-// API: cargar estado
+// API
 // ============================================================
 async function cargarEstadoUsuario() {
     try {
-        const res = await fetch(`/api/usuario/${USUARIO_ID}/estado`);
-        if (!res.ok) throw new Error('No se pudo cargar el estado del usuario');
-        const data = await res.json();
+        const res = await fetch(`/api/juego/estado/${encodeURIComponent(USUARIO_ID)}`, { cache: 'no-store' });
 
-        misMonedas           = data.monedas ?? 0;
-        logosDesbloqueados   = data.logos_desbloqueados ?? [];
-        checklistDias        = data.checklist_dias ?? [];
-        checklistHechoHoy    = data.checklist_hecho_hoy ?? false;
+        if (res.status === 404) {
+            // La cuenta ya no existe en la base de datos: se vuelve al inicio de sesión
+            ['userId', 'userName', 'userEmail', 'userPhone', 'userDob', 'userAvatar'].forEach(k => localStorage.removeItem(k));
+            window.location.href = '/index.html';
+            return false;
+        }
+        if (!res.ok) throw new Error('No se pudo cargar el estado del juego');
+
+        estado = await res.json();
+        return true;
     } catch (err) {
         console.error('Error cargando estado:', err);
-        // Fallback: si el endpoint no existe todavía, usa monedas por separado
-        await cargarMonedasServidor();
+        Swal.fire({
+            icon: 'error',
+            title: 'Sin conexión con el servidor',
+            text: 'No pudimos cargar tus monedas y logos. Intenta de nuevo en un momento.',
+            confirmButtonText: 'Reintentar',
+            confirmButtonColor: 'rgba(0, 51, 160, 0.938)'
+        }).then(() => window.location.reload());
+        return false;
     }
 }
 
-// Endpoint legado de monedas (por si acaso)
-async function cargarMonedasServidor() {
-    try {
-        const res = await fetch(`/api/monedas/usuario/${USUARIO_ID}`);
-        if (!res.ok) throw new Error('Usuario no encontrado');
-        const data = await res.json();
-        misMonedas = data.cantidad;
-        renderMonedas();
-    } catch (err) {
-        console.error('Error al cargar monedas:', err);
-    }
-}
-
-// ============================================================
-// API: mutaciones
-// ============================================================
-async function comprarLogo(logoId, costo) {
+async function comprarLogo(logoId) {
     const res = await fetch('/api/logos/comprar', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ usuario_id: USUARIO_ID, logo_id: logoId, costo })
+        body: JSON.stringify({ usuario_id: USUARIO_ID, logo_id: logoId })
     });
     const data = await res.json();
     if (!res.ok || !data.success) {
         throw new Error(data.error || 'Error al comprar logo');
     }
-    // Sincronizar estado local con lo que devuelve el backend
-    misMonedas = data.monedas;
-    logosDesbloqueados = data.logos_desbloqueados;
-    return data;
-}
-
-async function marcarChecklistHoy() {
-    const res = await fetch('/api/checklist/completar', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ usuario_id: USUARIO_ID })
-    });
-    const data = await res.json();
-    if (!res.ok || !data.success) {
-        throw new Error(data.error || 'Error al guardar checklist');
-    }
-    checklistDias      = data.checklist_dias;
-    checklistHechoHoy  = true;
-    return data;
+    estado = data;
 }
 
 // ============================================================
 // RENDER
 // ============================================================
+function renderTodo() {
+    renderMonedas();
+    actualizarAlbum();
+    actualizarDiasDesbloqueados();
+    actualizarBotonChecklist();
+}
+
 function renderMonedas() {
-    if (coinCounter) coinCounter.textContent = misMonedas;
+    if (coinCounter) coinCounter.textContent = estado.monedas;
 }
 
 function actualizarAlbum() {
@@ -134,7 +119,7 @@ function actualizarAlbum() {
         const lock   = item.querySelector('.lock-overlay');
         const btn    = item.querySelector('.btn-buy-logo');
 
-        if (logosDesbloqueados.includes(logoId)) {
+        if (estado.logos_desbloqueados.includes(logoId)) {
             img.classList.remove('locked-logo');
             lock.style.display = 'none';
             btn.classList.add('btn-success');
@@ -145,29 +130,46 @@ function actualizarAlbum() {
 }
 
 function actualizarDiasDesbloqueados() {
-    const dailyItems = document.querySelectorAll('.daily-item');
-    const diaActual  = checklistDias.length; // 0 = día 1
+    const dailyItems  = document.querySelectorAll('.daily-item');
+    const completados = estado.dias_completados;
+    const hechoHoy    = estado.checklist_hecho_hoy;
+    // Día que se juega hoy (0 = día 1); si ya lo hizo, el siguiente es el de mañana
+    const indiceHoy    = hechoHoy ? completados - 1 : completados;
+    const indiceManana = hechoHoy ? completados : completados + 1;
 
     dailyItems.forEach((item, index) => {
-        if (index === diaActual) {
-            item.classList.add('active');
-            item.classList.remove('locked', 'completed');
-        } else if (index < diaActual) {
+        const label = item.querySelector('.day-label');
+        const img   = item.querySelector('.daily-img');
+
+        item.classList.remove('active', 'completed', 'locked');
+
+        if (index < completados) {
             item.classList.add('completed');
-            item.classList.remove('locked', 'active');
+            img.classList.remove('silueta');
+        } else if (index === indiceHoy) {
+            item.classList.add('active');
+            img.classList.remove('silueta');
         } else {
             item.classList.add('locked');
-            item.classList.remove('active', 'completed');
+            img.classList.add('silueta');
         }
+
+        if (index === indiceHoy) label.textContent = hechoHoy ? 'HOY ✓' : 'HOY';
+        else if (index === indiceManana) label.textContent = 'MAÑANA';
+        else label.textContent = `DÍA ${index + 1}`;
     });
 
-    if (rachaCounter) rachaCounter.textContent = checklistDias.length;
+    if (rachaCounter) rachaCounter.textContent = completados;
 }
 
 function actualizarBotonChecklist() {
-    if (checklistHechoHoy) {
+    if (estado.juego_completado) {
         btnCheckList.classList.add('btn-success');
-        btnCheckList.textContent = '✓';
+        btnCheckList.textContent = '¡RETO COMPLETADO! 👑';
+        btnCheckList.disabled = true;
+    } else if (estado.checklist_hecho_hoy) {
+        btnCheckList.classList.add('btn-success');
+        btnCheckList.textContent = '✓ CHECK LIST DE HOY LISTO';
         btnCheckList.disabled = true;
     }
 }
@@ -185,9 +187,9 @@ function registrarListeners() {
             const costo  = parseInt(this.dataset.cost, 10);
             const logoId = item.dataset.id;
 
-            if (logosDesbloqueados.includes(logoId)) return;
+            if (estado.logos_desbloqueados.includes(logoId)) return;
 
-            if (misMonedas < costo) {
+            if (estado.monedas < costo) {
                 Swal.fire({
                     icon: 'warning',
                     title: '¡No tienes suficientes monedas!',
@@ -203,9 +205,8 @@ function registrarListeners() {
             // Deshabilitar para evitar doble click
             this.disabled = true;
             try {
-                await comprarLogo(logoId, costo);
-                renderMonedas();
-                actualizarAlbum();
+                await comprarLogo(logoId);
+                renderTodo();
             } catch (err) {
                 console.error(err);
                 this.disabled = false;
@@ -220,7 +221,7 @@ function registrarListeners() {
 
     // --- Checklist / detector ---
     btnCheckList.addEventListener('click', () => {
-        if (!checklistHechoHoy) modalDetector.style.display = 'flex';
+        if (!estado.checklist_hecho_hoy && !estado.juego_completado) modalDetector.style.display = 'flex';
     });
 
     btnCerrarDetector.addEventListener('click', () => {

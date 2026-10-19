@@ -4,6 +4,9 @@ node_modules/
 # Archivos de entorno / Claves secretas de base de datos
 .env
 .env.local
+# .gitignore
+node_modules/
+.env
 
 # Archivos de registros y logs
 npm-debug.log*

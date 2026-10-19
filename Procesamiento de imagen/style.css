@@ -2792,7 +2792,7 @@ body.bg-dark {
         @media (max-width: 500px) {
             body {
                 padding: 0;
-                background-color: #000000 !important;
+                background-color: #ffffff !important;
             }
             .page-watermark-bg {
                 display: none; /* En celular la cámara toma toda la pantalla */

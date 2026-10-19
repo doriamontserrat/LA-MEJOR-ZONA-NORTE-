@@ -64,17 +64,15 @@
                 <span class="menu-arrow">❯</span>
             </a>
 
-            <!-- Opción: Salir -->
-            <!-- Cambia "index.html" por el nombre real de tu pantalla de Iniciar Sesión -->
-            <a href="/index.html" class="profile-menu-item" onclick="cerrarSesion()">
-                <div class="menu-item-left">
-                    <div class="menu-icon-circle">
-                        <img src="/iconos/salir.png" alt="Icono Salir" class="menu-custom-icon">
-                    </div>
-                    <span class="menu-text">SALIR</span>
+          <a href="/index.html" class="profile-menu-item" onclick="cerrarSesion(event)">
+            <div class="menu-item-left">
+                <div class="menu-icon-circle">
+                    <img src="/iconos/salir.png" alt="Icono Salir" class="menu-custom-icon">
                 </div>
-                <span class="menu-arrow">❯</span>
-            </a>
+                <span class="menu-text">SALIR</span>
+            </div>
+            <span class="menu-arrow">❯</span>
+        </a>
 
         </div>
 
@@ -171,8 +169,7 @@
         
         // Función rápida para limpiar la memoria al salir (opcional)
         function cerrarSesion() {
-            // Si quieres que el juego se reinicie al cerrar sesión, quita las diagonales de la siguiente línea:
-            // localStorage.clear();
+        localStorage.clear();
         }
     </script>
 </body>

@@ -100,6 +100,9 @@ video,
     border-radius: 6px !important;
     z-index: 9999 !important;
     border: 1px solid #3b82f6 !important;
+    white-space: pre-line; /* Permite saltos de línea ordenados */
+    z-index: 99; /* Por debajo de botones (100+) */
+    pointer-events: none;
 }
 
 .escaner-back-btn {

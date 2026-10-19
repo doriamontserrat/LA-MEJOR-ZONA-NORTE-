@@ -44,10 +44,14 @@ router.post('/crear', async (req, res) => {
     );
 
     // Crear entrada de monedas para el usuario
-    await pool.query(
-      'INSERT INTO monedas_usuario (usuario_id, cantidad) VALUES (?, ?)',
-      [result.insertId, 0]
-    );
+    try {
+      await pool.query(
+        'INSERT INTO monedas_usuario (usuario_id, cantidad) VALUES (?, ?)',
+        [result.insertId, 0]
+      );
+    } catch (monedaErr) {
+      console.warn('No se pudo inicializar la tabla monedas_usuario:', monedaErr.message);
+    }
 
     const [rows] = await pool.query(
       `SELECT ${COLUMNAS_PUBLICAS} FROM usuarios WHERE id = ?`,
@@ -69,7 +73,7 @@ router.post('/crear', async (req, res) => {
   }
 });
 
-// Iniciar sesión: valida correo y contraseña contra la BD
+// Iniciar sesión
 router.post('/login', async (req, res) => {
   try {
     const email = normalizarEmail(req.body.email);
@@ -118,9 +122,14 @@ router.get('/email/:email', async (req, res) => {
 // Obtener usuario por ID
 router.get('/id/:id', async (req, res) => {
   try {
+    const userId = parseInt(req.params.id, 10);
+    if (isNaN(userId)) {
+      return res.status(400).json({ error: 'ID de usuario no válido' });
+    }
+
     const [rows] = await pool.query(
       `SELECT ${COLUMNAS_PUBLICAS} FROM usuarios WHERE id = ?`,
-      [req.params.id]
+      [userId]
     );
 
     if (rows.length === 0) {
@@ -134,10 +143,14 @@ router.get('/id/:id', async (req, res) => {
   }
 });
 
-// Actualizar perfil de usuario (la contraseña solo cambia si se envía una nueva)
+// Actualizar perfil de usuario
 router.put('/actualizar/:id', async (req, res) => {
   try {
-    const { id } = req.params;
+    const userId = parseInt(req.params.id, 10);
+    if (isNaN(userId)) {
+      return res.status(400).json({ error: 'ID de usuario no válido' });
+    }
+
     const { nombre, telefono, fecha_nacimiento, avatar, password } = req.body;
 
     if (!nombre) {
@@ -147,7 +160,6 @@ router.put('/actualizar/:id', async (req, res) => {
     const campos = ['nombre = ?', 'telefono = ?', 'fecha_nacimiento = ?'];
     const valores = [nombre, telefono || null, fecha_nacimiento || null];
 
-    // Si no se envía avatar se conserva el actual
     if (avatar) {
       campos.push('avatar = ?');
       valores.push(avatar);
@@ -162,7 +174,7 @@ router.put('/actualizar/:id', async (req, res) => {
 
     const [result] = await pool.query(
       `UPDATE usuarios SET ${campos.join(', ')} WHERE id = ?`,
-      [...valores, id]
+      [...valores, userId]
     );
 
     if (result.affectedRows === 0) {
@@ -171,7 +183,7 @@ router.put('/actualizar/:id', async (req, res) => {
 
     const [rows] = await pool.query(
       `SELECT ${COLUMNAS_PUBLICAS} FROM usuarios WHERE id = ?`,
-      [id]
+      [userId]
     );
 
     res.json({ success: true, usuario: rows[0], mensaje: 'Perfil actualizado' });

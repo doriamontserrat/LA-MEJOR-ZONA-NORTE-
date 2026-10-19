@@ -89,7 +89,8 @@ async function comprarLogo(logoId) {
     const res = await fetch('/api/logos/comprar', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ usuario_id: USUARIO_ID, logo_id: logoId })
+        body: JSON.stringify({ usuario_id: USUARIO_ID, logo_id: 
+            logoId })
     });
     const data = await res.json();
     if (!res.ok || !data.success) {

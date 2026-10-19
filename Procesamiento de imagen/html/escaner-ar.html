@@ -216,7 +216,7 @@
             <div class="controls">
                 <button class="control-btn" id="start-btn" onclick="startAR()">Iniciar AR</button>
                 <button class="control-btn" id="stop-btn" onclick="stopAR()" style="background: rgba(255, 0, 0, 0.8)">Detener</button>
-                <button class="control-btn" id="camera-btn" onclick="switchCamera()">Cambiar Cámara</button>
+                <button class="control-btn" id="camera-btn" onclick="captureAndShareImage()">📸 Capturar</button>
             </div>
         </div>
     </div>
@@ -467,19 +467,56 @@
             }
         }
 
-        // Cambiar cámara
-        function switchCamera() {
-            facingMode = facingMode === 'environment' ? 'user' : 'environment';
-            const video = document.getElementById('camera-video');
-            if (video.srcObject) {
-                video.srcObject.getTracks().forEach(track => track.stop());
+        // Capturar y compartir imagen del AR
+        async function captureAndShareImage() {
+            if (!isRunning) {
+                updateStatus('Inicia AR primero para capturar imágenes', 'error');
+                return;
             }
-            if (isRunning) {
-                stopAR();
-                setTimeout(startAR, 500);
-            } else {
-                accessCamera();
+
+            try {
+                const canvas = document.getElementById('ar-canvas');
+                
+                // Convertir canvas a blob
+                canvas.toBlob(async (blob) => {
+                    // Crear archivo de imagen
+                    const file = new File([blob], 'ar-capture.png', { type: 'image/png' });
+                    
+                    // Verificar si Web Share API está disponible
+                    if (navigator.share) {
+                        try {
+                            await navigator.share({
+                                title: 'Acereros AR',
+                                text: '¡Mira lo que capturé con el Escáner AR de Acereros!',
+                                files: [file]
+                            });
+                            updateStatus('✓ Imagen compartida correctamente', 'success');
+                        } catch (err) {
+                            if (err.name !== 'AbortError') {
+                                console.error('Error al compartir:', err);
+                                descargarImagen(canvas);
+                            }
+                        }
+                    } else {
+                        // Fallback: descargar imagen si no está disponible Web Share API
+                        descargarImagen(canvas);
+                    }
+                }, 'image/png');
+            } catch (error) {
+                console.error('Error capturando imagen:', error);
+                updateStatus('Error al capturar imagen: ' + error.message, 'error');
             }
+        }
+
+        // Descargar imagen como fallback
+        function descargarImagen(canvas) {
+            const link = document.createElement('a');
+            link.href = canvas.toDataURL('image/png');
+            link.download = `ar-capture-${new Date().getTime()}.png`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            updateStatus('✓ Imagen descargada', 'success');
         }
 
         // Inicializar al cargar página

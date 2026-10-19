@@ -44,6 +44,80 @@ function llenarFormulario(u) {
     if (u.avatar && imagenPrevia) imagenPrevia.src = u.avatar;
 }
 
+
+// Calcula edad exacta a partir de "YYYY-MM-DD"
+function calcularEdad(fechaStr) {
+    if (!fechaStr) return null;
+    const hoy = new Date();
+    const nac = new Date(fechaStr + 'T00:00:00');
+    if (isNaN(nac.getTime())) return null;
+
+    let edad = hoy.getFullYear() - nac.getFullYear();
+    const m = hoy.getMonth() - nac.getMonth();
+    if (m < 0 || (m === 0 && hoy.getDate() < nac.getDate())) edad--;
+    return edad;
+}
+
+// Nombre: solo letras (incluye acentos y ñ), espacios, guiones y apóstrofes
+function validarNombre(nombre) {
+    if (!nombre) return 'El nombre es obligatorio.';
+    if (nombre.length < 3) return 'El nombre debe tener al menos 3 caracteres.';
+    if (nombre.length > 60) return 'El nombre no puede superar 60 caracteres.';
+    // Sin números ni símbolos raros
+    const regex = /^[A-Za-zÁÉÍÓÚáéíóúÑñÜü\s'.-]+$/;
+    if (!regex.test(nombre)) return 'El nombre solo puede contener letras, espacios, guiones y puntos.';
+    // No permitir solo espacios o solo símbolos
+    if (!/[A-Za-zÁÉÍÓÚáéíóúÑñ]/.test(nombre)) return 'El nombre debe contener letras.';
+    return null;
+}
+
+// Email con formato básico
+function validarEmail(email) {
+    if (!email) return 'El correo es obligatorio.';
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+    if (!regex.test(email)) return 'El correo no tiene un formato válido.';
+    return null;
+}
+
+// Teléfono: exactamente 10 dígitos numéricos 
+function validarTelefono(tel) {
+    if (!tel) return 'El teléfono es obligatorio.';
+    if (!/^\d{10}$/.test(tel)) return 'El teléfono debe tener exactamente 10 dígitos numéricos.';
+    return null;
+}
+
+// Fecha de nacimiento: 18 a 100 años
+function validarFechaNacimiento(fechaStr) {
+    if (!fechaStr) return 'La fecha de nacimiento es obligatoria.';
+
+    const nac = new Date(fechaStr + 'T00:00:00');
+    if (isNaN(nac.getTime())) return 'La fecha de nacimiento no es válida.';
+
+    if (nac > new Date()) return 'La fecha de nacimiento no puede ser en el futuro.';
+
+    const edad = calcularEdad(fechaStr);
+    if (edad === null) return 'La fecha de nacimiento no es válida.';
+    if (edad < 18) return 'Debes tener al menos 18 años para registrarte.';
+    if (edad > 100) return 'La edad no puede ser mayor a 100 años.';
+
+    return null;
+}
+
+// Contraseña: mínimo 8, mayúscula, minúscula, número y símbolo
+function validarPassword(pass, esEdicion) {
+    if (esEdicion && !pass) return null;
+    if (!pass) return 'La contraseña es obligatoria.';
+    if (pass.length < 8) return 'La contraseña debe tener al menos 8 caracteres.';
+    if (!/[A-Z]/.test(pass)) return 'La contraseña debe incluir al menos una mayúscula.';
+    if (!/[a-z]/.test(pass)) return 'La contraseña debe incluir al menos una minúscula.';
+    if (!/\d/.test(pass)) return 'La contraseña debe incluir al menos un número.';
+    if (!/[!@#$%^&*()_\-+=.,;:?¡¿{}[\]<>|\\/~`"']/.test(pass)) {
+        return 'La contraseña debe incluir al menos un símbolo.';
+    }
+    return null;
+}
+
+
 // 1. Cargar los datos del usuario desde la base de datos
 document.addEventListener('DOMContentLoaded', async () => {
     const id = userId();
@@ -105,12 +179,48 @@ if (profileForm) {
         if (errorBox) errorBox.textContent = '';
 
         const id = userId();
+        const nombre = document.getElementById('input-nombre').value.trim();
+        const email = inputEmail.value.trim();
+        const telefono = document.getElementById('input-telefono').value.trim();
+        const fechaNacimiento = document.getElementById('input-cumple').value;
+        const password = inputContra.value;
+        const esEdicion = !!id;
+
+        // Validaciones del cliente
+        let errores = [];
+
+        // Validar nombre
+        const errNombre = validarNombre(nombre);
+        if (errNombre) errores.push(errNombre);
+
+        // Validar email
+        const errEmail = validarEmail(email);
+        if (errEmail) errores.push(errEmail);
+
+        // Validar teléfono
+        const errTelefono = validarTelefono(telefono);
+        if (errTelefono) errores.push(errTelefono);
+
+        // Validar fecha de nacimiento
+        const errFecha = validarFechaNacimiento(fechaNacimiento);
+        if (errFecha) errores.push(errFecha);
+
+        // Validar contraseña (es obligatoria en registro, opcional en edición)
+        const errPassword = validarPassword(password, esEdicion);
+        if (errPassword) errores.push(errPassword);
+
+        // Si hay errores, mostrar el primero
+        if (errores.length > 0) {
+            if (errorBox) errorBox.textContent = errores[0];
+            return;
+        }
+
         const datos = {
-            nombre: document.getElementById('input-nombre').value.trim(),
-            email: inputEmail.value.trim(),
-            telefono: document.getElementById('input-telefono').value.trim(),
-            fecha_nacimiento: document.getElementById('input-cumple').value,
-            password: inputContra.value
+            nombre,
+            email,
+            telefono,
+            fecha_nacimiento: fechaNacimiento,
+            password
         };
         if (avatarNuevo) datos.avatar = avatarNuevo;
 

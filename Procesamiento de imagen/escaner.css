@@ -184,9 +184,9 @@ video,
     width: 38px;
     height: 38px;
     background: rgba(20, 20, 30, 0.85);
-    border: 2px solid #a855f7;
+    border: 2px solid #3b82f6 ;
     border-radius: 50%;
-    color: #a855f7;
+    color: #3b82f6 ;
     font-size: 20px;
     font-weight: bold;
     cursor: pointer;
@@ -201,7 +201,7 @@ video,
 
 .btn-ayuda-flotante:active {
     transform: scale(0.9);
-    background: #a855f7;
+    background: #3b82f6;
     color: #ffffff;
 }
 
@@ -225,12 +225,12 @@ video,
             left: 20px;
             right: 20px;
             background: rgba(20, 20, 30, 0.85);
-            border: 2px solid #a855f7;
+            border: 2px solid #3b82f6;
             border-radius: 16px;
             padding: 15px;
             color: #ffffff;
             z-index: 100;
-            box-shadow: 0 8px 32px rgba(168, 85, 247, 0.4);
+            box-shadow: 0 8px 32px rgba(0, 51, 160, 0.4);
             backdrop-filter: blur(8px);
             font-family: sans-serif;
             animation: fadeInDown 0.5s ease-out;
@@ -246,7 +246,7 @@ video,
         .tutorial-vr-title {
             font-size: 15px;
             font-weight: bold;
-            color: #d8b4fe;
+            color: #3b82f6;
             margin: 0;
             display: flex;
             align-items: center;

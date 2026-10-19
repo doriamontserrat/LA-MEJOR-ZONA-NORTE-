@@ -21,7 +21,8 @@
 
         // El escaneo del logo necesita la cámara trasera, Mind-AR siempre la usa;
         btnGirarCamara.addEventListener('click', () => {
-            textoCamara.textContent = 'Trasera (AR)';
+            usandoCamaraTrasera = !usandoCamaraTrasera;
+            textoCamara.textContent = usandoCamaraTrasera ? 'Trasera' : 'Frontal';
         });
 
         const filtros = ['none', 'grayscale(100%)', 'sepia(100%)', 'invert(100%)', 'hue-rotate(90deg)'];

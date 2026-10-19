@@ -350,12 +350,12 @@
 
         // ===== MIND-AR + A-FRAME detección del logo y modelo 3D MUEJEJEJEJ =====
         function actualizarDebug(msg) {
-            const debugEl = document.getElementById('debug-status');
-            if (debugEl) {
-                debugEl.textContent = msg + '\n[' + new Date().toLocaleTimeString() + ']';
-            }
-            console.log(msg);
+        const debugEl = document.getElementById('debug-status');
+        if (debugEl) {
+            debugEl.textContent = msg;
         }
+        console.log(msg);
+         }   
 
         function iniciarMindAR() {
             actualizarDebug('✓ Esperando escena AR...');

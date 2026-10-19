@@ -19,10 +19,49 @@
         let video = null; // se asigna cuando Mind-AR arranca su propia cámara
         let usandoCamaraTrasera = true;
 
-        // El escaneo del logo necesita la cámara trasera, Mind-AR siempre la usa;
-        btnGirarCamara.addEventListener('click', () => {
-            usandoCamaraTrasera = !usandoCamaraTrasera;
-            textoCamara.textContent = usandoCamaraTrasera ? 'Trasera' : 'Frontal';
+        // Botón para compartir imagen
+        btnGirarCamara.addEventListener('click', async () => {
+            if (!video) return;
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+
+            ctx.save();
+
+            if (!usandoCamaraTrasera) {
+                ctx.translate(canvas.width, 0);
+                ctx.scale(-1, 1);
+            }
+
+            ctx.filter = filtros[filtroActual];
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            ctx.restore();
+
+            canvas.toBlob(async (blob) => {
+                if (!blob) return;
+
+                const archivo = new File(
+                    [blob],
+                    'foto-zona-norte.jpg',
+                    { type: 'image/jpeg' }
+                );
+
+                if (
+                    navigator.share &&
+                    navigator.canShare &&
+                    navigator.canShare({ files: [archivo] })
+                ) {
+                    try {
+                        await navigator.share({
+                            title: 'Mi foto Zona Norte',
+                            text: '¡Mira mi foto de Zona Norte!',
+                            files: [archivo]
+                        });
+                    } catch (error) {
+                        console.log('Compartir cancelado');
+                    }
+                }
+            });
         });
 
         const filtros = ['none', 'grayscale(100%)', 'sepia(100%)', 'invert(100%)', 'hue-rotate(90deg)'];

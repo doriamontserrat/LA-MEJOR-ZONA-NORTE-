@@ -27,8 +27,8 @@ app.use((req, res, next) => {
 });
 
 // 2. Middlewares de parsing (JSON y URL Encoded)
-app.use(express.json({ limit: '4mb' }));
-app.use(express.urlencoded({ extended: true, limit: '4mb' }));
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // 3. RUTAS DE API (Van PRIMERO para evitar conflictos con archivos estáticos)
 app.use('/api/usuarios', usuariosRoutes);

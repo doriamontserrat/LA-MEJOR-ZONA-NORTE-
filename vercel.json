@@ -1,19 +1,16 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "server.js",
-      "use": "@vercel/node"
+  "framework": null,
+  "buildCommand": null,
+  "outputDirectory": "Procesamiento de imagen",
+  "functions": {
+    "api/index.js": {
+      "excludeFiles": "Procesamiento de imagen/**"
     }
-  ],
-  "routes": [
+  },
+  "rewrites": [
     {
-      "src": "/api/(.*)",
-      "dest": "server.js"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/Procesamiento de imagen/$1"
+      "source": "/api/(.*)",
+      "destination": "/api"
     }
   ]
 }

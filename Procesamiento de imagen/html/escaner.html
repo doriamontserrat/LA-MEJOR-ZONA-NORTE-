@@ -26,6 +26,21 @@
             <div class="debug-status" id="debug-status">Cargando...</div>
             <a href="/html/principal.html" class="escaner-back-btn">❮</a>
 
+            <button id="btn-ayuda-rv" class="btn-ayuda-flotante" onclick="const t = document.getElementById('tutorial-rv-box'); t.style.display = (t.style.display === 'none' || !t.style.display) ? 'block' : 'none';">
+        ?
+    </button>
+
+        <!-- RECUADRO DE TUTORIAL / GUÍA DE REALIDAD VIRTUAL -->
+        <div id="tutorial-rv-box" class="tutorial-vr-overlay" style="display: none;">
+            <div class="tutorial-vr-header">
+                <h3 class="tutorial-vr-title">Escáner de Realidad Virtual 📸</h3>
+                <button class="tutorial-vr-close" onclick="document.getElementById('tutorial-rv-box').style.display='none';">×</button>
+            </div>
+            <p class="tutorial-vr-text">
+                Apunta la cámara hacia un <strong>logo de un equipo de beisbol del norte</strong> dentro del recuadro. Al detectarlo, se activará la experiencia en realidad virtual y también mostrará datos sobre este. ⚾
+            </p>
+        </div>
+
             <a-scene id="ar-scene"
                mindar-image="imageTargetSrc: /Escaneo/targets.mind; autoStart: true; uiScanning: no; uiLoading: no; uiError: no;"
                color-space="sRGB"

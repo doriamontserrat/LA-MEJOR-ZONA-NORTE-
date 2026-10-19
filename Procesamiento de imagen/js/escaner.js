@@ -191,7 +191,7 @@
 
         // 2. Logo centrado abajo (dentro de la imagen, sobre el marco inferior)
         try {
-            const logo = await cargarImagen('logo-azul.png');
+            const logo = await cargarImagen('img/logo-azul.png');
 
             // Tamaño del logo: 18% del ancho de la foto (ajústalo a tu gusto)
             const logoW = Math.round(canvas.width * 0.18);

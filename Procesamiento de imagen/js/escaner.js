@@ -135,42 +135,96 @@
             window.location.href = url;
         });
 
-       btnGuardarFoto.addEventListener('click', () => {
+        btnGuardarFoto.addEventListener('click', async () => {
         if (!video) return;
 
         const escenaAR = document.querySelector('#ar-scene');
         const canvas3D = escenaAR ? escenaAR.components.screenshot?.getCanvas('perspective') || escenaAR.canvas : null;
 
         // Dimensiones basadas en el video de la cámara
-        canvas.width = video.videoWidth || window.innerWidth;
-        canvas.height = video.videoHeight || window.innerHeight;
+        const videoW = video.videoWidth || window.innerWidth;
+        const videoH = video.videoHeight || window.innerHeight;
 
+        // Definimos el grosor del marco blanco (5% del lado menor)
+        const margen = Math.round(Math.min(videoW, videoH) * 0.05);
+
+        // Tamaño final del canvas: video + marco por los 4 lados
+        canvas.width  = videoW + margen * 2;
+        canvas.height = videoH + margen * 2;
+
+        // 1. Fondo blanco (el marco)
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Desplazamos el dibujo para que quede dentro del marco
         ctx.save();
+        ctx.translate(margen, margen);
+
+        // Recortamos la zona del video para no pintar sobre el marco
+        ctx.beginPath();
+        ctx.rect(0, 0, videoW, videoH);
+        ctx.clip();
 
         // Efecto espejo si se usa cámara frontal
         if (!usandoCamaraTrasera) {
-            ctx.translate(canvas.width, 0);
+            ctx.translate(videoW, 0);
             ctx.scale(-1, 1);
         }
 
-        // 1. Dibujar el video de la cámara
+        // 1.a Video de la cámara
         ctx.filter = filtros[filtroActual] || 'none';
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        ctx.drawImage(video, 0, 0, videoW, videoH);
+        ctx.filter = 'none';
 
-        ctx.restore();
+        ctx.restore(); // quita el clip y el mirror
 
-        // 2. Dibujar la capa 3D (A-Frame / MindAR) encima
+        // 1.b Capa 3D (A-Frame / MindAR) encima, dentro del marco
         if (canvas3D) {
-            ctx.drawImage(canvas3D, 0, 0, canvas.width, canvas.height);
+            ctx.save();
+            ctx.translate(margen, margen);
+            ctx.beginPath();
+            ctx.rect(0, 0, videoW, videoH);
+            ctx.clip();
+            ctx.drawImage(canvas3D, 0, 0, videoW, videoH);
+            ctx.restore();
+        }
+
+        // 2. Logo centrado abajo (dentro de la imagen, sobre el marco inferior)
+        try {
+            const logo = await cargarImagen('logo-azul.png');
+
+            // Tamaño del logo: 18% del ancho de la foto (ajústalo a tu gusto)
+            const logoW = Math.round(canvas.width * 0.18);
+            const logoH = Math.round(logoW * (logo.height / logo.width));
+
+            // Posición: centrado horizontal, dentro del margen inferior
+            const logoX = (canvas.width - logoW) / 2;
+            const logoY = canvas.height - margen - logoH - (margen * 0.15);
+            //           ↑ un pequeño extra para que no quede pegado al borde
+
+            ctx.drawImage(logo, logoX, logoY, logoW, logoH);
+        } catch (err) {
+            console.warn('No se pudo cargar el logo:', err);
         }
 
         // 3. Descargar la imagen combinada
-        const urlImagen = canvas.toDataURL('image/jpeg', 1.0);
+        const urlImagen = canvas.toDataURL('image/jpeg', 0.95);
         const enlace = document.createElement('a');
         enlace.download = 'foto-zona-norte.jpg';
         enlace.href = urlImagen;
         enlace.click();
     });
+
+    // Helper para cargar el logo como imagen
+    function cargarImagen(src) {
+        return new Promise((resolve, reject) => {
+            const img = new Image();
+            img.crossOrigin = 'anonymous'; // necesario si el logo está en otro dominio
+            img.onload = () => resolve(img);
+            img.onerror = reject;
+            img.src = src;
+        });
+    }
 
         btnRecompensa.addEventListener('click', function() {
             confetti({

@@ -206,6 +206,50 @@
                 transform: translate(-50%, -50%) scale(0.8);
             }
         }
+
+        .toast-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .toast-message {
+            background: rgba(0, 255, 0, 0.9);
+            border: 3px solid #00ff00;
+            color: #000;
+            padding: 20px 40px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 10px;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+            text-align: center;
+            animation: fadeInOut 2s ease-in-out forwards;
+        }
+
+        .toast-message.error {
+            background: rgba(255, 68, 68, 0.9);
+            border-color: #ff4444;
+            color: #fff;
+            box-shadow: 0 0 20px rgba(255, 68, 68, 0.5);
+        }
+
+        .toast-message.success {
+            background: rgba(0, 255, 0, 0.9);
+            border-color: #00ff00;
+            color: #000;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+        }
+
+        .toast-message.status {
+            background: rgba(255, 170, 0, 0.9);
+            border-color: #ffaa00;
+            color: #000;
+            box-shadow: 0 0 20px rgba(255, 170, 0, 0.5);
+        }
     </style>
 </head>
 <body>
@@ -213,6 +257,9 @@
     <div id="container">
         <video id="camera-video" playsinline autoplay muted></video>
         <canvas id="ar-canvas"></canvas>
+
+        <!-- Contenedor de notificaciones -->
+        <div class="toast-container" id="toast-container"></div>
 
         <!-- Indicador de escaneo -->
         <div class="scan-indicator"></div>
@@ -248,7 +295,21 @@
         let isRunning = false;
         let facingMode = 'environment'; // 'environment' para trasera, 'user' para frontal
 
-        // Actualizar status
+        // Mostrar notificación toast en el centro
+        function showToastNotification(message, type = 'status') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast-message ${type}`;
+            toast.textContent = message;
+            container.appendChild(toast);
+            
+            // Remover el elemento después de la animación (2 segundos)
+            setTimeout(() => {
+                toast.remove();
+            }, 2000);
+        }
+
+        // Actualizar status en el info-box (mantener para compatibilidad)
         function updateStatus(message, type = 'status') {
             const statusEl = document.getElementById('status-text');
             statusEl.textContent = message;
@@ -287,6 +348,7 @@
 
             // Cargar modelo 3D
             updateStatus('Cargando modelo 3D...', 'status');
+            showToastNotification('Cargando modelo 3D...', 'status');
             const loader = new THREE.GLTFLoader();
             
             try {
@@ -306,9 +368,11 @@
                 
                 scene.add(model);
                 updateStatus('Modelo cargado ✓', 'success');
+                showToastNotification('✓ Modelo cargado', 'success');
             } catch (error) {
                 console.error('Error cargando modelo:', error);
                 updateStatus('Error cargando modelo: ' + error.message, 'error');
+                showToastNotification('✗ Error cargando modelo', 'error');
                 model = createDefaultModel();
                 scene.add(model);
             }
@@ -342,6 +406,7 @@
                 // Esperar a que el video esté listo
                 video.onloadedmetadata = () => {
                     updateStatus('Cámara lista ✓', 'success');
+                    showToastNotification('✓ Cámara lista', 'success');
                     console.log('Video metadata loaded');
                 };
 
@@ -349,6 +414,7 @@
             } catch (error) {
                 console.error('Error accediendo a cámara:', error);
                 updateStatus('Error: No se puede acceder a la cámara', 'error');
+                showToastNotification('✗ Error: No se puede acceder a la cámara', 'error');
                 return false;
             }
         }
@@ -371,13 +437,7 @@
                 // Event listeners
                 mindarController.addEventListener('targetFound', (event) => {
                     console.log('Target encontrado:', event.targetIndex);
-                    const messageEl = document.getElementById('model-found');
-                    messageEl.classList.add('active');
-                    
-                    // Remover el mensaje después de 2 segundos
-                    setTimeout(() => {
-                        messageEl.classList.remove('active');
-                    }, 2000);
+                    showToastNotification('✓ ¡Logo encontrado!', 'success');
                     
                     if (scene.userData.mixer) {
                         scene.userData.mixer.timeScale = 1;
@@ -386,7 +446,7 @@
 
                 mindarController.addEventListener('targetLost', (event) => {
                     console.log('Target perdido:', event.targetIndex);
-                    document.getElementById('model-found').classList.remove('active');
+                    showToastNotification('✗ Logo perdido', 'status');
                     if (scene.userData.mixer) {
                         scene.userData.mixer.timeScale = 0;
                     }
@@ -397,6 +457,7 @@
             } catch (error) {
                 console.error('Error inicializando Mind-AR:', error);
                 updateStatus('Error Mind-AR: ' + error.message, 'error');
+                showToastNotification('✗ Error inicializando Mind-AR', 'error');
                 return false;
             }
         }
@@ -454,12 +515,14 @@
 
                 render();
                 updateStatus('AR activo - Escanea el logo ✓', 'success');
+                showToastNotification('✓ AR activo - Escanea el logo', 'success');
                 document.getElementById('start-btn').style.opacity = '0.5';
                 document.getElementById('stop-btn').style.opacity = '1';
 
             } catch (error) {
                 console.error('Error iniciando AR:', error);
                 updateStatus('Error: ' + error.message, 'error');
+                showToastNotification('✗ Error iniciando AR', 'error');
                 isRunning = false;
             }
         }
@@ -481,12 +544,13 @@
                 }
                 isRunning = false;
                 updateStatus('AR detenido', 'status');
+                showToastNotification('AR detenido', 'status');
                 document.getElementById('start-btn').style.opacity = '1';
                 document.getElementById('stop-btn').style.opacity = '0.5';
-                document.getElementById('model-found').classList.remove('active');
             } catch (error) {
                 console.error('Error deteniendo AR:', error);
                 updateStatus('Error al detener: ' + error.message, 'error');
+                showToastNotification('✗ Error al detener AR', 'error');
             }
         }
 
@@ -494,6 +558,7 @@
         async function captureAndShareImage() {
             if (!isRunning) {
                 updateStatus('Inicia AR primero para capturar imágenes', 'error');
+                showToastNotification('✗ Inicia AR primero', 'error');
                 return;
             }
 
@@ -514,6 +579,7 @@
                                 files: [file]
                             });
                             updateStatus('✓ Imagen compartida correctamente', 'success');
+                            showToastNotification('✓ Imagen compartida', 'success');
                         } catch (err) {
                             if (err.name !== 'AbortError') {
                                 console.error('Error al compartir:', err);
@@ -528,6 +594,7 @@
             } catch (error) {
                 console.error('Error capturando imagen:', error);
                 updateStatus('Error al capturar imagen: ' + error.message, 'error');
+                showToastNotification('✗ Error capturando imagen', 'error');
             }
         }
 
@@ -540,6 +607,7 @@
             link.click();
             document.body.removeChild(link);
             updateStatus('✓ Imagen descargada', 'success');
+            showToastNotification('✓ Imagen descargada', 'success');
         }
 
         // Inicializar al cargar página

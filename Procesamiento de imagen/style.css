@@ -2645,6 +2645,18 @@ body.bg-dark {
 
 .video-equipo .video-container {
     background-color: #000;
+    position: relative;
+}
+
+.video-preview-filtro {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 44px);
+    object-fit: contain;
+    background-color: #000;
+    pointer-events: none;
 }
 
 .video-equipo-player {

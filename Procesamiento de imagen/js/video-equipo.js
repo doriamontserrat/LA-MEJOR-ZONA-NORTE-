@@ -1,9 +1,52 @@
 (function () {
+    const canvasMini = document.createElement('canvas');
+
+    function dibujarPixelado(ctx, fuente, w, h) {
+        const bloque = Math.max(6, Math.round(w / 70));
+        canvasMini.width = Math.max(1, Math.round(w / bloque));
+        canvasMini.height = Math.max(1, Math.round(h / bloque));
+        canvasMini.getContext('2d').drawImage(fuente, 0, 0, canvasMini.width, canvasMini.height);
+        ctx.imageSmoothingEnabled = false;
+        ctx.drawImage(canvasMini, 0, 0, w, h);
+    }
+
+    // Paleta de cámara térmica: frío (azul/morado) a caliente (amarillo/blanco)
+    const PARADAS_TERMICAS = [
+        [0, 0, 0, 40], [0.25, 60, 0, 130], [0.5, 220, 30, 30], [0.75, 255, 170, 0], [1, 255, 255, 230]
+    ];
+    const PALETA_TERMICA = (() => {
+        const paleta = new Uint8ClampedArray(256 * 3);
+        for (let i = 0; i < 256; i++) {
+            const t = i / 255;
+            let k = 1;
+            while (k < PARADAS_TERMICAS.length - 1 && t > PARADAS_TERMICAS[k][0]) k++;
+            const a = PARADAS_TERMICAS[k - 1];
+            const b = PARADAS_TERMICAS[k];
+            const f = (t - a[0]) / (b[0] - a[0]);
+            for (let c = 0; c < 3; c++) paleta[i * 3 + c] = a[c + 1] + (b[c + 1] - a[c + 1]) * f;
+        }
+        return paleta;
+    })();
+
+    function dibujarTermico(ctx, fuente, w, h) {
+        ctx.drawImage(fuente, 0, 0, w, h);
+        const imagen = ctx.getImageData(0, 0, w, h);
+        const d = imagen.data;
+        for (let i = 0; i < d.length; i += 4) {
+            const l = Math.round(0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2]) * 3;
+            d[i] = PALETA_TERMICA[l];
+            d[i + 1] = PALETA_TERMICA[l + 1];
+            d[i + 2] = PALETA_TERMICA[l + 2];
+        }
+        ctx.putImageData(imagen, 0, 0);
+    }
+
+    // css: filtro nativo del navegador; dibujar: procesado por canvas (pixelado, térmico)
     const FILTROS = {
-        bn: { css: 'grayscale(1)', etiqueta: 'blanco_y_negro' },
-        sepia: { css: 'sepia(1)', etiqueta: 'sepia' },
-        contraste: { css: 'contrast(1.4) saturate(1.5)', etiqueta: 'contraste' },
-        invertido: { css: 'invert(1)', etiqueta: 'invertido' }
+        pixelado: { dibujar: dibujarPixelado, etiqueta: 'pixelado' },
+        termico: { dibujar: dibujarTermico, etiqueta: 'camara_termica' },
+        pastel: { css: 'saturate(0.6) brightness(1.2) contrast(0.8)', etiqueta: 'colores_pasteles' },
+        desenfoque: { css: 'blur(6px)', etiqueta: 'desenfoque' }
     };
 
     function descargarBlob(blob, nombre) {
@@ -45,6 +88,45 @@
 
         const filtroActual = () => FILTROS[selectFiltro.value];
 
+        let vistaActiva = false;
+        let preview = null;
+        let rafPreview = 0;
+
+        function quitarVista() {
+            vistaActiva = false;
+            video.style.filter = '';
+            cancelAnimationFrame(rafPreview);
+            if (preview) preview.remove();
+            preview = null;
+        }
+
+        function aplicarVista(filtro) {
+            quitarVista();
+            vistaActiva = true;
+            if (!filtro.dibujar) {
+                video.style.filter = filtro.css;
+                return;
+            }
+            preview = document.createElement('canvas');
+            preview.className = 'video-preview-filtro';
+            video.parentElement.appendChild(preview);
+            const pctx = preview.getContext('2d', { willReadFrequently: true });
+            const bucle = () => {
+                if (video.videoWidth) {
+                    const escala = Math.min(1, 640 / video.videoWidth);
+                    const w = Math.round(video.videoWidth * escala);
+                    const h = Math.round(video.videoHeight * escala);
+                    if (preview.width !== w || preview.height !== h) {
+                        preview.width = w;
+                        preview.height = h;
+                    }
+                    filtro.dibujar(pctx, video, w, h);
+                }
+                rafPreview = requestAnimationFrame(bucle);
+            };
+            bucle();
+        }
+
         function reiniciarResultado() {
             blobFiltrado = null;
             btnDescargarFiltro.style.display = 'none';
@@ -52,13 +134,13 @@
 
         selectFiltro.addEventListener('change', () => {
             reiniciarResultado();
-            if (video.style.filter) video.style.filter = filtroActual().css;
+            if (vistaActiva) aplicarVista(filtroActual());
             estado.textContent = '';
         });
 
         btnQuitar.addEventListener('click', () => {
             if (procesando) return;
-            video.style.filter = '';
+            quitarVista();
             reiniciarResultado();
             btnQuitar.style.display = 'none';
             estado.textContent = 'Filtro quitado.';
@@ -75,13 +157,13 @@
 
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
-            if (!window.MediaRecorder || !canvas.captureStream || !('filter' in ctx)) {
+            const filtro = filtroActual();
+            if (!window.MediaRecorder || !canvas.captureStream || (filtro.css && !('filter' in ctx))) {
                 estado.textContent = 'Tu navegador no soporta el procesamiento de video. Usa Chrome, Edge o Firefox.';
                 return;
             }
 
-            const filtro = filtroActual();
-            video.style.filter = filtro.css;
+            aplicarVista(filtro);
             btnQuitar.style.display = 'block';
             reiniciarResultado();
             video.pause();
@@ -144,9 +226,13 @@
                     grabador.onerror = () => reject(new Error('Error al grabar el video.'));
                 });
 
-                ctx.filter = filtro.css;
+                if (filtro.css) ctx.filter = filtro.css;
                 const dibujar = () => {
-                    ctx.drawImage(fuente, 0, 0, canvas.width, canvas.height);
+                    if (filtro.dibujar) {
+                        filtro.dibujar(ctx, fuente, canvas.width, canvas.height);
+                    } else {
+                        ctx.drawImage(fuente, 0, 0, canvas.width, canvas.height);
+                    }
                     if (fuente.duration) {
                         barraInterna.style.width = Math.min(100, (fuente.currentTime / fuente.duration) * 100).toFixed(1) + '%';
                     }

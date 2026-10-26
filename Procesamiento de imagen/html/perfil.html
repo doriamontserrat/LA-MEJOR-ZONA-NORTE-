@@ -23,7 +23,7 @@
 
                 <!-- Foto de perfil y botón de editar -->
                 <div class="profile-avatar-container">
-                    <img src="/img/images.png" alt="Foto de perfil" class="profile-avatar" id="vista-previa-foto">
+                    <img src="/img/preedeterminada.jpeg" alt="Foto de perfil" class="profile-avatar" id="vista-previa-foto">
                     
                     <!-- Botón visual para el input file -->
                     <label for="subir-foto" class="edit-avatar-btn">✏️</label>
@@ -50,10 +50,15 @@
                         <input type="email" id="input-email" placeholder="correo@ejemplo.com" required>
                     </div>
 
-                     <div class="input-group">
-                        <label>CONTRASEÑA</label>
-                        <input type="password" id="input-contra" minlength="6" placeholder="Contraseña segura ejemplo: DmGc142857¿" required>
+                 <div class="input-group">
+                    <label>CONTRASEÑA</label>
+                    <div class="password-wrapper" style="position: relative; display: flex; align-items: center;">
+                        <input type="password" id="input-contra" minlength="6" placeholder="Contraseña segura ejemplo: DmGc142857¿" required style="width: 100%; padding-right: 40px;">
+                        <button type="button" id="toggle-password" style="position: absolute; right: 10px; background: none; border: none; cursor: pointer; padding: 0; display: flex; align-items: center; justify-content: center;">
+                            <img src="/img/eye.png" id="img-ojo" alt="Mostrar contraseña" style="width: 20px; height: 20px; object-fit: contain;">
+                        </button>
                     </div>
+                </div>
                     
                     <div class="input-group">
                         <label>CUMPLEAÑOS</label>

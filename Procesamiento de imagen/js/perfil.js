@@ -120,6 +120,23 @@ function validarPassword(pass, esEdicion) {
 
 // 1. Cargar los datos del usuario desde la base de datos
 document.addEventListener('DOMContentLoaded', async () => {
+
+    const togglePasswordBtn = document.getElementById('toggle-password');
+    const passwordInput = document.getElementById('input-contra');
+
+    if (togglePasswordBtn && passwordInput) {
+        togglePasswordBtn.addEventListener('click', () => {
+            // Verifica el tipo actual del input
+            const isPassword = passwordInput.getAttribute('type') === 'password';
+            
+            // Cambia el tipo de input entre 'text' y 'password'
+            passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+            
+            // Opcional: Cambiar la opacidad o la apariencia del ojo según el estado
+            togglePasswordBtn.style.opacity = isPassword ? '0.6' : '1';
+        });
+    }
+    
     const id = userId();
     if (!id) return; // Modo registro si no hay sesión activa
 

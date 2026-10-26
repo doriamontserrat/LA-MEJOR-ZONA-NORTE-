@@ -151,15 +151,6 @@
 
             
         // Mostrar datos del equipo detectado
-        btnCambiarFiltro.addEventListener('click', () => {
-            const equipo = targetActual !== null ? equiposData[targetActual] : equiposData[0];
-            document.getElementById('modal-equipo-nombre').textContent = equipo.nombre;
-            document.getElementById('modal-equipo-desc').textContent = equipo.descripcion;
-            btnVerMasEquipo.dataset.url = equipo.url;
-            
-            modalEquipo.style.display = 'flex';
-        });
-
         btnCerrarModal.addEventListener('click', () => {
             modalEquipo.style.display = 'none';
         });
@@ -371,13 +362,32 @@
 
         cargarEstadoJuego();
 
+        // Muestra los datos del equipo solo una vez por modelo (se recuerda por usuario)
+        const CLAVE_DATOS_VISTOS = `datosVistos_${USUARIO_ID || 'anonimo'}`;
+        const leerDatosVistos = () => {
+            try {
+                return JSON.parse(localStorage.getItem(CLAVE_DATOS_VISTOS)) || [];
+            } catch (err) {
+                return [];
+            }
+        };
+
         btnEscanear.addEventListener('click', function() {
-            vistaCamara.style.backgroundColor = 'white';
-            setTimeout(() => {
-                vistaCamara.style.display = 'none';
-                vistaResultado.style.display = 'flex';
-                vistaCamara.style.backgroundColor = 'black'; 
-            }, 150);
+            if (targetActual === null) return;
+
+            const vistos = leerDatosVistos();
+            if (vistos.includes(targetActual)) return;
+            localStorage.setItem(CLAVE_DATOS_VISTOS, JSON.stringify([...vistos, targetActual]));
+
+            const equipo = equiposData[targetActual];
+            document.getElementById('modal-equipo-nombre').textContent = equipo.nombre;
+            document.getElementById('modal-equipo-desc').textContent = equipo.descripcion;
+            btnVerMasEquipo.dataset.url = equipo.url;
+            modalEquipo.style.display = 'flex';
+        });
+
+        btnCambiarFiltro.addEventListener('click', function() {
+            window.location.href = '/html/quiz.html';
         });
 
         btnVolverCamara.addEventListener('click', function() {

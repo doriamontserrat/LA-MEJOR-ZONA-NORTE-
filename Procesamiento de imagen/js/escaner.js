@@ -353,7 +353,6 @@
                     mostrarRecompensa(data);
                 }
             } catch (err) {
-                console.error('Error registrando escaneo:', err);
                 actualizarDebug('No se pudo guardar tu logo.\nVuelve a apuntar al logo para reintentar.');
             } finally {
                 registrandoEscaneo = false;
@@ -437,7 +436,6 @@
                         });
                     } catch (error) {
                         // El usuario canceló el menú de compartir
-                        console.log('Compartir cancelado');
                     }
 
                 } else {    
@@ -453,13 +451,9 @@
         });
 
         // ===== MIND-AR + A-FRAME detección del logo y modelo 3D MUEJEJEJEJ =====
-        function actualizarDebug(msg) {
-        const debugEl = document.getElementById('debug-status');
-        if (debugEl) {
-            debugEl.textContent = msg;
-        }
-        console.log(msg);
-         }   
+         function actualizarDebug(msg) {
+        // Mensajes de depuración deshabilitados
+         }
 
         function iniciarMindAR() {
             actualizarDebug('✓ Esperando escena AR...');
